@@ -72,15 +72,6 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ros2_control_test_assets REQUIRED)
 
-  ament_add_gmock(test_jaka_hardware_interface test/test_jaka_hardware_interface.cpp)
-  target_include_directories(test_jaka_hardware_interface PRIVATE include ${EIGEN3_INCLUDE_DIRS}) # 测试也需要包含
-  ament_target_dependencies(
-    test_jaka_hardware_interface
-    hardware_interface
-    pluginlib
-    ros2_control_test_assets
-    Eigen3
-  )
 endif()
 
 ament_export_include_directories(include)

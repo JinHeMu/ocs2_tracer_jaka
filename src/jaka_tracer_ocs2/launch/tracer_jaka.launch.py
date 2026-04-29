@@ -19,7 +19,7 @@ def generate_launch_description():
         launch.actions.DeclareLaunchArgument(
             name='urdfFile',
             default_value=get_package_share_directory('jaka_tracer_ocs2')
-                + 'resource/tracer_jaka/urdf/tracer_jaka_zu5_demo.urdf'),
+                + '/resource/tracer_jaka/urdf/tracer_jaka_zu5_demo.urdf'),
 
         launch.actions.DeclareLaunchArgument(
             name='taskFile',

@@ -1,0 +1,28 @@
+# =============================================================================
+# ros_gz_bridge 配置：Gazebo Harmonic <-> ROS 2 双向桥接
+# =============================================================================
+# gz_ros2_control 内部已经把 controller 相关的 topic（cmd_vel/odom/joint_states）
+# 直接以 ROS 2 接口暴露，所以这里只需要桥接「Gazebo 原生」的 topic：
+#   - /clock          : 仿真时间
+#   - /world/.../scene/info 之类（如需）
+# 如果你给机器人加了相机/雷达，请在这里追加。
+# =============================================================================
+
+- ros_topic_name: "/clock"
+  gz_topic_name:  "/clock"
+  ros_type_name:  "rosgraph_msgs/msg/Clock"
+  gz_type_name:   "gz.msgs.Clock"
+  direction:      GZ_TO_ROS
+
+# 如果启用 D435 相机，再放开下面这两条：
+# - ros_topic_name: "/camera/image"
+#   gz_topic_name:  "/camera/image"
+#   ros_type_name:  "sensor_msgs/msg/Image"
+#   gz_type_name:   "gz.msgs.Image"
+#   direction:      GZ_TO_ROS
+#
+# - ros_topic_name: "/camera/depth_image"
+#   gz_topic_name:  "/camera/depth_image"
+#   ros_type_name:  "sensor_msgs/msg/Image"
+#   gz_type_name:   "gz.msgs.Image"
+#   direction:      GZ_TO_ROS

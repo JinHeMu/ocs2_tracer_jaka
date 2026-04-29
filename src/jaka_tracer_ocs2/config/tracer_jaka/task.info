@@ -177,12 +177,12 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  100.0  ; joint_1 velocity
-      (1,1)  100.0  ; joint_2 velocity
-      (2,2)  100.0  ; joint_3 velocity
-      (3,3)  100.0  ; joint_4 velocity
-      (4,4)  100.0  ; joint_5 velocity
-      (5,5)  100.0  ; joint_6 velocity
+      (0,0)  1.0  ; joint_1 velocity
+      (1,1)  1.0  ; joint_2 velocity
+      (2,2)  1.0  ; joint_3 velocity
+      (3,3)  1.0  ; joint_4 velocity
+      (4,4)  1.0  ; joint_5 velocity
+      (5,5)  1.0  ; joint_6 velocity
     }
   }
 }
@@ -222,7 +222,6 @@ selfCollision
 
     [10] "base_link, gripper_base_link"
     [11] "urbase_base_link, gripper_base_link"
-    [12] "camera_link" ,"Link_3"
   }
 
   collisionObjectPairs

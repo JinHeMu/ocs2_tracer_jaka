@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>tracer_jaka_gazebo</name>
+  <version>0.1.0</version>
+  <description>
+    Gazebo Harmonic + ROS 2 Jazzy 移动机械臂仿真包，
+    用于 OCS2 wheel-based mobile manipulator MPC 验证。
+    机器人 = AgileX Tracer 差速底盘 + Jaka ZU5 (6-DoF) + DH AG95 夹爪 + RealSense D435。
+  </description>
+  <maintainer email="user@todo.com">user</maintainer>
+  <license>BSD-3-Clause</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- 描述与控制 -->
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <!-- ros2_control 全家桶 -->
+  <exec_depend>ros2_control</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>joint_trajectory_controller</exec_depend>
+  <exec_depend>velocity_controllers</exec_depend>
+
+  <!-- Gazebo Harmonic 集成 -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>gz_ros2_control</exec_depend>
+
+  <!-- 原 OCS2 工程的 mesh 资源 -->
+  <exec_depend>jaka_tracer_ocs2</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

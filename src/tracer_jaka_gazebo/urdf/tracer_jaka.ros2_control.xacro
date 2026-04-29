@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!--
+  ros2_control 硬件接口定义
+    - 仿真模式：使用 gz_ros2_control/GazeboSimSystem，关节由 Gazebo 物理仿真接管
+    - 实机模式：留空示例，用户可替换为 jaka 厂商的 hardware_interface 插件
+  关节集合（OCS2 wheel-based mobile manipulator 状态/输入）：
+    底盘：left_wheel + right_wheel  (velocity)
+    手臂：joint_1 ... joint_6        (position + velocity)
+  夹爪所有指节均为 fixed，不在 ros2_control 之内（OCS2 不控）
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="tracer_jaka_ros2_control" params="sim_mode">
+
+    <ros2_control name="TracerJakaSystem" type="system">
+
+      <hardware>
+        <xacro:if value="${sim_mode}">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${sim_mode}">
+          <!-- 实机硬件接口示意：替换为 Tracer + Jaka 的真实硬件接口 -->
+          <plugin>fake_components/GenericSystem</plugin>
+        </xacro:unless>
+      </hardware>
+
+      <!-- ============ 差速底盘：两个驱动轮（速度控制） ============ -->
+      <joint name="left_wheel">
+        <command_interface name="velocity">
+          <param name="min">-10.0</param>
+          <param name="max"> 10.0</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_wheel">
+        <command_interface name="velocity">
+          <param name="min">-10.0</param>
+          <param name="max"> 10.0</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <!-- ============ 6 DOF 机械臂：position + velocity ============ -->
+      <!-- 同时声明 position/velocity 两种 command_interface，方便切换不同控制器；
+           OCS2 通常使用 position + velocity 联合的 joint_trajectory_controller -->
+      <xacro:macro name="arm_joint" params="name lower upper">
+        <joint name="${name}">
+          <command_interface name="position">
+            <param name="min">${lower}</param>
+            <param name="max">${upper}</param>
+          </command_interface>
+          <command_interface name="velocity">
+            <param name="min">-3.14</param>
+            <param name="max"> 3.14</param>
+          </command_interface>
+          <state_interface name="position">
+            <param name="initial_value">1.57</param>
+          </state_interface>
+          <state_interface name="velocity"/>
+          <state_interface name="effort"/>
+        </joint>
+      </xacro:macro>
+
+      <xacro:arm_joint name="joint_1" lower="-6.28" upper="6.28"/>
+      <xacro:arm_joint name="joint_2" lower="-1.48" upper="4.62"/>
+      <xacro:arm_joint name="joint_3" lower="-3.05" upper="3.05"/>
+      <xacro:arm_joint name="joint_4" lower="-1.48" upper="4.62"/>
+      <xacro:arm_joint name="joint_5" lower="-6.28" upper="6.28"/>
+      <xacro:arm_joint name="joint_6" lower="-6.28" upper="6.28"/>
+
+    </ros2_control>
+
+  </xacro:macro>
+
+</robot>

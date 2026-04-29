@@ -1,0 +1,51 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    jaka_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+
+jaka_arm_controller:
+  ros__parameters:
+    joints:
+      - joint_1
+      - joint_2
+      - joint_3
+      - joint_4
+      - joint_5
+      - joint_6
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      - velocity
+
+    allow_partial_joints_goal: false
+    open_loop_control: false
+
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel"]
+    right_wheel_names: ["right_wheel"]
+
+    wheel_separation: 0.34
+    wheel_radius: 0.085
+
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+
+    publish_rate: 50.0
+    enable_odom_tf: true
+    use_stamped_vel: false
+
+    cmd_vel_timeout: 0.5

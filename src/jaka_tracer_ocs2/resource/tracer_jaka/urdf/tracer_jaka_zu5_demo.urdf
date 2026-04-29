@@ -11,7 +11,7 @@
     <visual>
       <origin rpy="1.57 0 1.57" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/tracer_base_link_no_wheel.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_base_link_no_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -45,7 +45,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -71,7 +71,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -97,7 +97,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -122,7 +122,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -147,7 +147,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -172,7 +172,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -198,7 +198,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -224,7 +224,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -250,7 +250,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -276,7 +276,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -394,7 +394,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
@@ -416,7 +416,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
@@ -438,7 +438,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
@@ -460,7 +460,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1"/>
@@ -484,7 +484,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/second_base/meshes/urbase_base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/second_base/meshes/urbase_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="1 1 1 1"/>
@@ -512,7 +512,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_0.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_0.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -536,7 +536,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_1.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -561,7 +561,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.14315"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_2.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -600,7 +600,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_3.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_3.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -639,7 +639,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_4.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_4.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -664,7 +664,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_5.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_5.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -689,7 +689,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jaka_zu5_meshes/Link_6.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_6.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.84706 0.84706 0.84706 1"/>
@@ -808,7 +808,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 -0.0315"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/jk_se_vi_200/meshes/jk_se_vi_200_link.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jk_se_vi_200/meshes/jk_se_vi_200_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="1 1 1 1"/></material>
     </visual>
@@ -840,7 +840,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/connector_description/meshes/base_link.STL"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/connector_description/meshes/base_link.STL"/>
       </geometry>
       <material name=""><color rgba="0 0 0 1"/></material>
     </visual>
@@ -875,7 +875,7 @@
     <visual>
       <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="0.0043 -0.0175 0"/>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/realsense2_description/meshes/d435.dae"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/realsense2_description/meshes/d435.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -907,7 +907,7 @@
   <link name="gripper_base_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/dh_base_link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/dh_base_link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -948,7 +948,7 @@
   <link name="gripper_finger1_knuckle_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/crank_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/crank_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -967,7 +967,7 @@
   <link name="gripper_finger2_knuckle_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/crank_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/crank_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1003,7 +1003,7 @@
   <link name="gripper_finger1_finger_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/rod_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/rod_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1022,7 +1022,7 @@
   <link name="gripper_finger2_finger_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/rod_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/rod_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1058,7 +1058,7 @@
   <link name="gripper_finger1_inner_knuckle_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/proximal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/proximal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1077,7 +1077,7 @@
   <link name="gripper_finger2_inner_knuckle_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/proximal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/proximal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1113,7 +1113,7 @@
   <link name="gripper_finger1_finger_tip_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/distal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/distal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -1132,7 +1132,7 @@
   <link name="gripper_finger2_finger_tip_link">
     <visual>
       <geometry>
-        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/distal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/distal_phalanx_Link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name=""><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>

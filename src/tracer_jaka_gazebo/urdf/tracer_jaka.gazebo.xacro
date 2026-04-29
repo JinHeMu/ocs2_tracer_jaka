@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!--
+  Gazebo Harmonic（gz-sim）专用：
+    - 注入 gz_ros2_control 系统插件，把控制器加载进 Gazebo 仿真
+    - 设置摩擦：驱动轮高摩擦，万向轮（球形 collision）极低摩擦让其自由滑动
+    - joint_state_publisher / odometry / sensor 等通过 ros_gz_bridge 桥接到 ROS 2
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="tracer_jaka_gazebo">
+
+    <!-- 主控制插件：加载 ros2_control controller_manager -->
+    <gazebo>
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find tracer_jaka_gazebo)/config/tracer_jaka_controllers.yaml</parameters>
+        <ros>
+          <remapping>/controller_manager/robot_description:=/robot_description</remapping>
+        </ros>
+      </plugin>
+    </gazebo>
+
+    <!-- ============ 驱动轮：橡胶高摩擦 ============ -->
+    <gazebo reference="right_wheel_link">
+      <mu1>10</mu1>
+      <mu2>10</mu2>
+      <kp>1e7</kp>
+      <kd>1.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+    <gazebo reference="left_wheel_link">
+      <mu1>10</mu1>
+      <mu2>10</mu2>
+      <kp>1e7</kp>
+      <kd>1.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+
+    <!-- ============ 万向轮：极低摩擦让其滑动（castor 关节是 fixed） ============ -->
+    <xacro:macro name="low_friction_castor" params="link_name">
+      <gazebo reference="${link_name}">
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+        <kp>1e6</kp>
+        <kd>1.0</kd>
+        <minDepth>0.001</minDepth>
+      </gazebo>
+    </xacro:macro>
+    <xacro:low_friction_castor link_name="fl_wheel_link"/>
+    <xacro:low_friction_castor link_name="fr_wheel_link"/>
+    <xacro:low_friction_castor link_name="rl_wheel_link"/>
+    <xacro:low_friction_castor link_name="rr_wheel_link"/>
+
+    <!-- ============ 基础物理属性（机械臂连杆） ============ -->
+    <xacro:macro name="self_collide_link" params="link_name">
+      <gazebo reference="${link_name}">
+        <self_collide>true</self_collide>
+        <mu1>0.5</mu1>
+        <mu2>0.5</mu2>
+      </gazebo>
+    </xacro:macro>
+    <xacro:self_collide_link link_name="Link_0"/>
+    <xacro:self_collide_link link_name="Link_1"/>
+    <xacro:self_collide_link link_name="Link_2"/>
+    <xacro:self_collide_link link_name="Link_3"/>
+    <xacro:self_collide_link link_name="Link_4"/>
+    <xacro:self_collide_link link_name="Link_5"/>
+    <xacro:self_collide_link link_name="Link_6"/>
+
+  </xacro:macro>
+
+</robot>
