@@ -9,7 +9,7 @@ find_package(ament_cmake REQUIRED)
 
 # 没有 C++ 代码，仅安装资源
 install(
-  DIRECTORY launch urdf config worlds rviz
+  DIRECTORY launch urdf config worlds rviz resources
   DESTINATION share/${PROJECT_NAME}
 )
 

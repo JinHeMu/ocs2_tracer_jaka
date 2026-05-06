@@ -48,7 +48,7 @@ source install/setup.bash
 
 
 ```bash
-export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:$(dirname $(ros2 pkg prefix --share jaka_tracer_ocs2))
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:$(dirname $(ros2 pkg prefix --share tracer_jaka_ocs2))
 ```
 
 ## 3. 运行
@@ -87,7 +87,7 @@ ros2 launch tracer_jaka_gazebo gazebo.launch.py
 ros2 topic pub /diff_drive_controller/cmd_vel geometry_msgs/msg/TwistStamped "{header: {frame_id: 'base_footprint'}, twist: {linear: {x: 0.1}, angular: {z: 0.0}}}" -r 10
 
 # 给机械臂发轨迹（home -> 一个简单姿态）
-ros2 topic pub --once /arm_trajectory_controller/joint_trajectory \
+ros2 topic pub --once /jaka_arm_controller/joint_trajectory \
     trajectory_msgs/msg/JointTrajectory \
     "{joint_names: ['joint_1','joint_2','joint_3','joint_4','joint_5','joint_6'],
       points: [{positions: [0.0, 1.57, -1.0, 0.0, 1.0, 0.0],

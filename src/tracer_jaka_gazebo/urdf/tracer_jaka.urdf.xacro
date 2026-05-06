@@ -23,7 +23,7 @@
     <visual>
       <origin rpy="1.57 0 1.57" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_base_link_no_wheel.dae"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/tracer_base_link_no_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -64,7 +64,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/tracer_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -92,7 +92,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/tracer_wheel.dae"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/tracer_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -121,7 +121,7 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor_joint.dae"/>
+          <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/castor_joint.dae"/>
         </geometry>
       </visual>
       <collision>
@@ -143,7 +143,7 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/tracer_description/meshes/castor.dae"/>
+          <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/castor.dae"/>
         </geometry>
       </visual>
       <collision>
@@ -175,7 +175,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/aluminium/meshes/aluminium_base_link.STL"/>
+          <mesh filename="package://tracer_jaka_gazebo/resources/aluminium/meshes/aluminium_base_link.STL"/>
         </geometry>
         <material name="white"><color rgba="0.898 0.917 0.929 1"/></material>
       </visual>
@@ -206,7 +206,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/second_base/meshes/urbase_base_link.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/second_base/meshes/urbase_base_link.STL"/>
       </geometry>
       <material name="plate_white"><color rgba="1 1 1 1"/></material>
     </visual>
@@ -244,7 +244,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_0.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_0.STL"/>
       </geometry>
       <material name="silver"><color rgba="0.84706 0.84706 0.84706 1"/></material>
     </visual>
@@ -267,7 +267,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_1.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_1.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -286,7 +286,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.14315"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_2.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_2.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -312,7 +312,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_3.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_3.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -339,7 +339,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_4.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_4.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -357,7 +357,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_5.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_5.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -375,7 +375,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jaka_zu5_meshes/Link_6.STL"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jaka_zu5_meshes/Link_6.STL"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -447,7 +447,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 -0.0315"/>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/jk_se_vi_200/meshes/jk_se_vi_200_link.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/jk_se_vi_200/meshes/jk_se_vi_200_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
@@ -470,7 +470,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://jaka_tracer_ocs2/resource/tracer_jaka/meshes/dh_robotics_ag95_description/meshes/visual/dh_base_link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tracer_jaka_gazebo/resources/dh_robotics_ag95_description/meshes/visual/dh_base_link.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="silver"/>
     </visual>

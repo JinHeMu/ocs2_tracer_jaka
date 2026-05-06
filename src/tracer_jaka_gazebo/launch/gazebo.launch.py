@@ -173,5 +173,5 @@ def generate_launch_description():
         delay_diff_after_jsb,
         delay_arm_after_diff,
         # rviz 延后 4s 启动，等 TF 就绪
-        TimerAction(period=4.0, actions=[rviz_node]),
+        #TimerAction(period=4.0, actions=[rviz_node]),
     ])

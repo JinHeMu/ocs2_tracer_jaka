@@ -1,0 +1,87 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Description Source: Topic
+      Description Topic:
+        Value: /robot_description
+        Depth: 1
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: false
+      Marker Scale: 0.5
+
+    # OCS2 markers
+    - Class: rviz_default_plugins/MarkerArray
+      Name: MPC_TargetTrajectories
+      Enabled: true
+      Topic:
+        Value: /mobile_manipulator/desiredTrajectories
+        Depth: 5
+
+    - Class: rviz_default_plugins/MarkerArray
+      Name: MPC_OptimizedTrajectories
+      Enabled: true
+      Topic:
+        Value: /mobile_manipulator/optimizedStateTrajectory
+        Depth: 5
+
+    - Class: rviz_default_plugins/Path
+      Name: BaseOptimalPath
+      Enabled: true
+      Topic:
+        Value: /mobile_manipulator/optimizedPoseTrajectory
+        Depth: 5
+      Color: 25; 255; 0
+      Line Width: 0.02
+
+    # 用 2D Goal Pose 工具发到 /goal_pose, 你可以把 target_pose_topic 改成 /goal_pose
+    - Class: rviz_default_plugins/Pose
+      Name: TargetPose
+      Enabled: true
+      Topic:
+        Value: /target_pose
+        Depth: 5
+      Color: 255; 25; 0
+      Shape: Arrow
+
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: odom
+    Frame Rate: 30
+
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /target_pose
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 5.0
+      Pitch: 0.7
+      Yaw: 0.785
+
+Window Geometry:
+  Width: 1280
+  Height: 800
