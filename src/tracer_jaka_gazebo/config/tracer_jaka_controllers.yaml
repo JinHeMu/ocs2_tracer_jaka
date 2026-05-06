@@ -4,12 +4,12 @@
 # 控制器一览：
 #   1. joint_state_broadcaster      : 发布 /joint_states
 #   2. diff_drive_controller        : 接 OCS2 底盘速度  -> /cmd_vel + 发布 /odom
-#   3. arm_trajectory_controller    : 接 OCS2 机械臂轨迹 -> /arm_trajectory_controller/joint_trajectory
+#   3. jaka_arm_controller    : 接 OCS2 机械臂轨迹 -> /jaka_arm_controller/joint_trajectory
 # =============================================================================
 
 controller_manager:
   ros__parameters:
-    update_rate: 200    # 200 Hz，OCS2 MPC 通常 100~400 Hz，这里取中间值
+    update_rate: 50    # 200 Hz，OCS2 MPC 通常 100~400 Hz，这里取中间值
 
     # ---- 控制器声明 ----
     joint_state_broadcaster:
@@ -18,7 +18,7 @@ controller_manager:
     diff_drive_controller:
       type: diff_drive_controller/DiffDriveController
 
-    arm_trajectory_controller:
+    jaka_arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
     # 备选：纯速度前向控制器（OCS2 直接输出关节速度时启用）
@@ -77,7 +77,7 @@ diff_drive_controller:
 # -----------------------------------------------------------------------------
 # 机械臂轨迹控制器（推荐：OCS2 输出 trajectory_msgs/JointTrajectory）
 # -----------------------------------------------------------------------------
-arm_trajectory_controller:
+jaka_arm_controller:
   ros__parameters:
     joints:
       - joint_1

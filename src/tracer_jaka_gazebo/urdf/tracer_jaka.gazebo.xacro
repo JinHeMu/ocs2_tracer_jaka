@@ -21,16 +21,16 @@
 
     <!-- ============ 驱动轮：橡胶高摩擦 ============ -->
     <gazebo reference="right_wheel_link">
-      <mu1>10</mu1>
-      <mu2>10</mu2>
+      <mu1>1</mu1>
+      <mu2>1</mu2>
       <kp>1e7</kp>
       <kd>1.0</kd>
       <minDepth>0.001</minDepth>
       <maxVel>0.1</maxVel>
     </gazebo>
     <gazebo reference="left_wheel_link">
-      <mu1>10</mu1>
-      <mu2>10</mu2>
+      <mu1>1</mu1>
+      <mu2>1</mu2>
       <kp>1e7</kp>
       <kd>1.0</kd>
       <minDepth>0.001</minDepth>

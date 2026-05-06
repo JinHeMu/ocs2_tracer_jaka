@@ -48,7 +48,7 @@ def generate_launch_description():
         DeclareLaunchArgument('world',
             default_value=PathJoinSubstitution([pkg_share, 'worlds', 'empty.world'])),
         DeclareLaunchArgument('rviz_config',
-            default_value=PathJoinSubstitution([pkg_share, 'rviz', 'tracer_jaka.rviz'])),
+            default_value=PathJoinSubstitution([pkg_share, 'rviz', 'mobile_manipulator.rviz'])),
         DeclareLaunchArgument('use_rviz', default_value='true'),
         DeclareLaunchArgument('x',   default_value='0.0'),
         DeclareLaunchArgument('y',   default_value='0.0'),
@@ -135,7 +135,7 @@ def generate_launch_description():
     arm_traj_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_trajectory_controller', '--controller-manager', '/controller_manager'],
+        arguments=['jaka_arm_controller', '--controller-manager', '/controller_manager'],
         output='screen',
     )
 

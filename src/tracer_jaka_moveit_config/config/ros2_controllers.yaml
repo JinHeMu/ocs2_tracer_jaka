@@ -12,8 +12,8 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    jaka_fts_broadcaster:
-      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    # jaka_fts_broadcaster:
+    #   type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
 
 jaka_arm_controller:
   ros__parameters:
@@ -43,7 +43,7 @@ jaka_arm_controller:
 
 
 
-jaka_fts_broadcaster:
-  ros__parameters:
-    sensor_name: "tcp_fts_sensor"
-    frame_id: "jk_se_vi_200_link"
+# jaka_fts_broadcaster:
+#   ros__parameters:
+#     sensor_name: "tcp_fts_sensor"
+#     frame_id: "jk_se_vi_200_link"

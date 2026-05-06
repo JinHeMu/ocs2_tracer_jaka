@@ -46,6 +46,11 @@ source install/setup.bash
 
 ---
 
+
+```bash
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:$(dirname $(ros2 pkg prefix --share jaka_tracer_ocs2))
+```
+
 ## 3. 运行
 
 ### 3.1 仅 RViz（先验证 URDF）
@@ -58,7 +63,7 @@ ros2 launch tracer_jaka_gazebo display.launch.py
 
 ### 3.2 完整 Gazebo 仿真
 
-export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:$(dirname $(ros2 pkg prefix --share jaka_tracer_ocs2))
+
 
 ```bash
 ros2 launch tracer_jaka_gazebo gazebo.launch.py
