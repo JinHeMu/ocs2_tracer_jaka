@@ -108,7 +108,7 @@ def generate_launch_description():
             'urdfFile':          urdf_file,
             'libFolder':         lib_folder,
             'mrt_loop_rate':     100.0,
-            'traj_horizon':      0.1,
+            'traj_horizon':      0.05,
             'traj_num_points':   5,
             'odom_topic':        '/diff_drive_controller/odom',
             'joint_state_topic': '/joint_states',
@@ -127,11 +127,16 @@ def generate_launch_description():
         name='tracer_jaka_target_node',
         output='screen',
         parameters=[{
-            'robot_name':         'mobile_manipulator',
-            'target_pose_topic':  '/target_pose',
-            'use_sim_time':       use_sim_time,
+            'robot_name':    'mobile_manipulator',
+            'marker_frame':  'odom',                    # *** 关键 ***
+            'ee_frame':      'gripper_center_link',
+            'marker_scale':  0.3,
+            'input_dim':     8,
+            'use_sim_time':  use_sim_time,
         }],
     )
+
+
 
     # --------- 步骤 4: RViz2 ---------
     rviz_node = Node(

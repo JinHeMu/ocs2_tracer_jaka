@@ -311,10 +311,20 @@ class TracerJakaMrtBridge : public rclcpp::Node {
   /// 这样 JTC 不会触发 "Velocity of last point is not zero" 检查,
   /// 而是用样条自己插值出速度.
   void publishArmCommand(double currentTime, const ocs2::vector_t& currentState) {
+    // —— 防越界：把查询时间 clamp 到 policy 末端之前一点 ——
+    double queryTime = currentTime + trajHorizon_;
+    const auto& policy = mrt_->getPolicy();
+    if (!policy.timeTrajectory_.empty()) {
+      const double tEnd = policy.timeTrajectory_.back();
+      constexpr double kSafety = 1e-3;        // 留 1ms 余量
+      if (queryTime > tEnd - kSafety) {
+        queryTime = std::max(currentTime, tEnd - kSafety);
+      }
+    }
+
     ocs2::vector_t optState, optInput;
     size_t mode;
-    mrt_->evaluatePolicy(currentTime + trajHorizon_, currentState,
-                         optState, optInput, mode);
+    mrt_->evaluatePolicy(queryTime, currentState, optState, optInput, mode);
 
     trajectory_msgs::msg::JointTrajectory traj;
     traj.header.stamp = now();
@@ -324,10 +334,11 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     pt.positions.resize(armJointNames_.size());
     for (size_t i = 0; i < armJointNames_.size(); ++i)
       pt.positions[i] = optState(3 + i);
-    // velocities 故意留空 -> JTC 自己插值
-    pt.time_from_start.sec     = static_cast<int32_t>(trajHorizon_);
-    pt.time_from_start.nanosec = static_cast<uint32_t>(
-        (trajHorizon_ - static_cast<int>(trajHorizon_)) * 1e9);
+
+    // time_from_start 应该用实际查询出来的偏移量
+    const double dt = std::max(0.0, queryTime - currentTime);
+    pt.time_from_start.sec     = static_cast<int32_t>(dt);
+    pt.time_from_start.nanosec = static_cast<uint32_t>((dt - std::floor(dt)) * 1e9);
 
     traj.points.push_back(std::move(pt));
     arm_cmd_pub_->publish(traj);
