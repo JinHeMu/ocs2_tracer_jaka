@@ -21,7 +21,7 @@
   <!-- ==================== 移动底盘部分 ==================== -->
   <link name="base_link">
     <visual>
-      <origin rpy="1.57 0 1.57" xyz="0 0 0"/>
+      <origin rpy="1.57 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://tracer_jaka_gazebo/resources/tracer_description/meshes/tracer_base_link_no_wheel.dae"/>
       </geometry>
@@ -204,7 +204,7 @@
                iyy="0.0276040033352521" iyz="0" izz="0.0398165064505868"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 -1.57" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://tracer_jaka_gazebo/resources/second_base/meshes/urbase_base_link.STL"/>
       </geometry>
