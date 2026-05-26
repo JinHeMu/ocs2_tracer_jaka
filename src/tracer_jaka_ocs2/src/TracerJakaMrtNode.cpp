@@ -1,23 +1,17 @@
 // =============================================================================
 //  TracerJakaMrtNode.cpp
 //
-//  OCS2 MRT 节点 + Gazebo 控制器桥 (ROS 2)。
+//  OCS2 MRT 节点 + 控制器桥 (ROS 2)。
 //
-//  关键设计点 (相对上一版的修复):
-//   * 初始 target 不再写零, 而是通过 TF 查 odom -> gripper_center_link 的当前
-//     位姿, 让 MPC 一开始就保持在原位.
-//   * 给 JTC 发轨迹时 *只发位置*, 不发速度. 这样不会触发 JTC 的
-//     "Velocity of last trajectory point is not zero" 拒收逻辑.
-//   * 单点轨迹 (1 个 point @ traj_horizon ahead). 避免反复查询 MPC policy
-//     超出 plan 末端 ("currentTime > plan_end" 警告).
-//   * 给 MRT 单独一个 internal node, 主 node 留给我们自己 spin (避免
-//     双重 add_node 冲突).
+//  仿真 / 实机共用一份源码，靠参数切换:
+//    use_stamped_cmd : true  (默认)   -> 发布 TwistStamped (仿真 diff_drive_controller)
+//                      false          -> 发布 Twist        (实机 tracer_base_ros)
 //
-//  状态向量 (wheelBasedMobileManipulator, 已 removeJoints 轮子):
-//    state(0..2) : base x, base y, base yaw
-//    state(3..8) : joint_1 .. joint_6
-//    input(0..1) : forward velocity, yaw rate
-//    input(2..7) : joint_1_dot .. joint_6_dot
+//  其余设计点 (沿用上一版):
+//   * 初始 target = 当前 EE 位姿 (TF 查询), MPC 一开始就保持原位
+//   * JTC 轨迹只发 position, 不发 velocity, 避开 "last point velocity != 0" 拒收
+//   * 单点轨迹 (1 个 point @ traj_horizon ahead), 避免 currentTime > plan_end
+//   * MRT 用独立 internal node, 不跟主 node 抢 executor
 // =============================================================================
 
 #include <algorithm>
@@ -34,6 +28,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <tf2/LinearMath/Matrix3x3.h>
@@ -55,21 +50,22 @@ class TracerJakaMrtBridge : public rclcpp::Node {
  public:
   TracerJakaMrtBridge() : Node("tracer_jaka_mrt_node") {
     // ----- params -----
-    declare_parameter<std::string>("taskFile",         "");
-    declare_parameter<std::string>("libFolder",        "");
-    declare_parameter<std::string>("urdfFile",         "");
-    declare_parameter<double>("mrt_loop_rate",         100.0);
-    declare_parameter<double>("traj_horizon",          0.05);
-    declare_parameter<std::string>("base_cmd_topic",   "/diff_drive_controller/cmd_vel");
-    declare_parameter<std::string>("arm_cmd_topic",    "/jaka_arm_controller/joint_trajectory");
-    declare_parameter<std::string>("odom_topic",       "/diff_drive_controller/odom");
-    declare_parameter<std::string>("joint_state_topic","/joint_states");
+    declare_parameter<std::string>("taskFile",          "");
+    declare_parameter<std::string>("libFolder",         "");
+    declare_parameter<std::string>("urdfFile",          "");
+    declare_parameter<double>("mrt_loop_rate",          100.0);
+    declare_parameter<double>("traj_horizon",           0.05);
+    declare_parameter<std::string>("base_cmd_topic",    "/diff_drive_controller/cmd_vel");
+    declare_parameter<std::string>("arm_cmd_topic",     "/jaka_arm_controller/joint_trajectory");
+    declare_parameter<std::string>("odom_topic",        "/diff_drive_controller/odom");
+    declare_parameter<std::string>("joint_state_topic", "/joint_states");
+    declare_parameter<bool>("use_stamped_cmd",          true);   // *** new ***
     declare_parameter<std::vector<std::string>>(
         "arm_joint_names",
         std::vector<std::string>{"joint_1","joint_2","joint_3","joint_4","joint_5","joint_6"});
-    declare_parameter<std::string>("base_frame",       "base_footprint");
-    declare_parameter<std::string>("world_frame",      "odom");
-    declare_parameter<std::string>("ee_frame",         "gripper_center_link");
+    declare_parameter<std::string>("base_frame",  "base_footprint");
+    declare_parameter<std::string>("world_frame", "odom");
+    declare_parameter<std::string>("ee_frame",    "gripper_center_link");
 
     taskFile_       = get_parameter("taskFile").as_string();
     libFolder_      = get_parameter("libFolder").as_string();
@@ -80,6 +76,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     baseFrame_      = get_parameter("base_frame").as_string();
     worldFrame_     = get_parameter("world_frame").as_string();
     eeFrame_        = get_parameter("ee_frame").as_string();
+    useStampedCmd_  = get_parameter("use_stamped_cmd").as_bool();
 
     armQ_.assign(armJointNames_.size(), 0.0);
 
@@ -113,9 +110,20 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_);
 
     // ----- pubs -----
-    base_cmd_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>(
-        get_parameter("base_cmd_topic").as_string(), 10);
-    arm_cmd_pub_  = create_publisher<trajectory_msgs::msg::JointTrajectory>(
+    const std::string baseTopic = get_parameter("base_cmd_topic").as_string();
+    if (useStampedCmd_) {
+      base_cmd_stamped_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>(
+          baseTopic, 10);
+      RCLCPP_INFO(get_logger(),
+                  "Publishing base cmd as TwistStamped on %s", baseTopic.c_str());
+    } else {
+      base_cmd_unstamped_pub_ = create_publisher<geometry_msgs::msg::Twist>(
+          baseTopic, 10);
+      RCLCPP_INFO(get_logger(),
+                  "Publishing base cmd as Twist on %s (real-robot mode)",
+                  baseTopic.c_str());
+    }
+    arm_cmd_pub_ = create_publisher<trajectory_msgs::msg::JointTrajectory>(
         get_parameter("arm_cmd_topic").as_string(), 10);
 
     // ----- subs (在主 node 上, 由 main() 里的 executor spin) -----
@@ -140,7 +148,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
 
   /// MRT 主循环 (阻塞)
   void run() {
-    RCLCPP_INFO(get_logger(), "Waiting for /odom and /joint_states ...");
+    RCLCPP_INFO(get_logger(), "Waiting for odom and joint_states ...");
     rclcpp::Rate wait(10);
     while (rclcpp::ok() && (!gotOdom_ || !gotJs_)) wait.sleep();
     if (!rclcpp::ok()) return;
@@ -257,7 +265,6 @@ class TracerJakaMrtBridge : public rclcpp::Node {
 
   /// 通过 TF 查 world_frame -> ee_frame, 返回 [pos(3); quat-xyzw(4)]
   ocs2::vector_t lookupCurrentEEPose() {
-    // 等 TF tree 就绪 - robot_state_publisher 可能要花 ~1s
     rclcpp::Rate r(10);
     int retry = 30;
     while (rclcpp::ok() && retry-- > 0) {
@@ -297,26 +304,31 @@ class TracerJakaMrtBridge : public rclcpp::Node {
   }
 
   void publishBaseCommand(const ocs2::vector_t& input) {
-    geometry_msgs::msg::TwistStamped msg;
-    msg.header.stamp    = now();
-    msg.header.frame_id = baseFrame_;
-    if (input.size() >= 2) {
+    if (input.size() < 2) return;
+
+    if (useStampedCmd_) {
+      geometry_msgs::msg::TwistStamped msg;
+      msg.header.stamp    = now();
+      msg.header.frame_id = baseFrame_;
       msg.twist.linear.x  = input(0);
       msg.twist.angular.z = input(1);
+      base_cmd_stamped_pub_->publish(msg);
+    } else {
+      geometry_msgs::msg::Twist msg;
+      msg.linear.x  = input(0);
+      msg.angular.z = input(1);
+      base_cmd_unstamped_pub_->publish(msg);
     }
-    base_cmd_pub_->publish(msg);
   }
 
   /// 单点 trajectory, *只* 写 position, 不写 velocity.
-  /// 这样 JTC 不会触发 "Velocity of last point is not zero" 检查,
-  /// 而是用样条自己插值出速度.
   void publishArmCommand(double currentTime, const ocs2::vector_t& currentState) {
     // —— 防越界：把查询时间 clamp 到 policy 末端之前一点 ——
     double queryTime = currentTime + trajHorizon_;
     const auto& policy = mrt_->getPolicy();
     if (!policy.timeTrajectory_.empty()) {
       const double tEnd = policy.timeTrajectory_.back();
-      constexpr double kSafety = 1e-3;        // 留 1ms 余量
+      constexpr double kSafety = 1e-3;
       if (queryTime > tEnd - kSafety) {
         queryTime = std::max(currentTime, tEnd - kSafety);
       }
@@ -335,7 +347,6 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     for (size_t i = 0; i < armJointNames_.size(); ++i)
       pt.positions[i] = optState(3 + i);
 
-    // time_from_start 应该用实际查询出来的偏移量
     const double dt = std::max(0.0, queryTime - currentTime);
     pt.time_from_start.sec     = static_cast<int32_t>(dt);
     pt.time_from_start.nanosec = static_cast<uint32_t>((dt - std::floor(dt)) * 1e9);
@@ -348,6 +359,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
   std::string taskFile_, libFolder_, urdfFile_;
   std::string baseFrame_, worldFrame_, eeFrame_;
   double mrtRate_{100.0}, trajHorizon_{0.05};
+  bool   useStampedCmd_{true};
   std::vector<std::string> armJointNames_;
 
   std::unique_ptr<ocs2::mobile_manipulator::MobileManipulatorInterface> interface_;
@@ -359,7 +371,8 @@ class TracerJakaMrtBridge : public rclcpp::Node {
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
 
-  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr base_cmd_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr base_cmd_stamped_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr        base_cmd_unstamped_pub_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr arm_cmd_pub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr js_sub_;
@@ -394,7 +407,6 @@ int main(int argc, char** argv) {
     RCLCPP_ERROR(bridge->get_logger(), "MRT loop exception: %s", e.what());
   }
 
-  // 析构顺序: 先停 ROS spinner, 再关 MRT(它会停自己的内部线程), 再 shutdown
   exec.cancel();
   if (spinner.joinable()) spinner.join();
   bridge->shutdownOcs2();

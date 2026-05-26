@@ -154,5 +154,5 @@ def generate_launch_description():
         move_group_node,
         rviz_node,
 
-        dh_ag95_driver_node,
+        #dh_ag95_driver_node,
     ])

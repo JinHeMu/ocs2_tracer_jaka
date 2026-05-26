@@ -1,3 +1,5 @@
+# Default initial positions for tracer_jaka_zu5's ros2_control fake system
+
 initial_positions:
   joint_1: -0.515
   joint_2: 1.5707
