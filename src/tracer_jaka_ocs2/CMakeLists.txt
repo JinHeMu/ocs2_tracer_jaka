@@ -112,11 +112,24 @@ target_link_libraries(tracer_jaka_target_node
   Boost::log_setup
 )
 
+# ---- Target publisher ----
+add_executable(tracer_jaka_joy_target_node src/tracer_jaka_joy_target_node.cpp)
+ament_target_dependencies(tracer_jaka_joy_target_node ${common_deps})
+target_link_libraries(tracer_jaka_joy_target_node
+  Eigen3::Eigen
+  Boost::system
+  Boost::filesystem
+  Boost::thread
+  Boost::log
+  Boost::log_setup
+)
+
 # ---- Install ----
 install(TARGETS
   tracer_jaka_mpc_node
   tracer_jaka_mrt_node
   tracer_jaka_target_node
+  tracer_jaka_joy_target_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

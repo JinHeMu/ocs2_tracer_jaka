@@ -7,7 +7,7 @@ Panels:
         - /TargetPose1
         - /InteractiveMarkers1
       Splitter Ratio: 0.5
-    Tree Height: 302
+    Tree Height: 231
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -408,6 +408,18 @@ Visualization Manager:
       Show Descriptions: true
       Show Visual Aids: false
       Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /joy_target_axes
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -455,12 +467,12 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 800
+  Height: 699
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000019b000002cafc0200000002fb000000100044006900730070006c006100790073010000003b000001af000000c700fffffffb0000000a0056006900650077007301000001f000000115000000a000ffffff0000035f000002ca00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000001000000000000019b0000025dfc0200000002fb000000100044006900730070006c006100790073010000003f0000016d000000cc00fffffffb0000000a0056006900650077007301000001b2000000ea000000a900ffffff0000021d0000025d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1280
-  X: 574
-  Y: 137
+  Width: 958
+  X: 66
+  Y: 32

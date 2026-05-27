@@ -14,6 +14,7 @@
 # =============================================================================
 
 import os
+from launch.conditions import IfCondition
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription,
@@ -68,6 +69,9 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'lib_folder',
             default_value='/tmp/ocs2_tracer_jaka/auto_generated'),
+        DeclareLaunchArgument('use_joy',    default_value='true'),
+        DeclareLaunchArgument('joy_device', default_value='/dev/input/js0'),
+
     ]
 
     # --------- 步骤 1: 把 xacro 转成 urdf 落盘 ---------
@@ -149,11 +153,52 @@ def generate_launch_description():
         output='screen',
     )
 
+    use_joy    = LaunchConfiguration('use_joy')
+    joy_device = LaunchConfiguration('joy_device')
+
+    # 手柄驱动: 读 /dev/input/jsX, 出 /joy
+    joy_driver = Node(
+        package='joy', executable='joy_node', name='joy_node',
+        parameters=[{
+            'device_id':         0,           # 对应 /dev/input/js0; 多手柄改 1,2...
+            'deadzone':          0.05,        # 驱动层死区
+            'autorepeat_rate':   20.0,        # 没事件时按这个 Hz 重发, 配合定时器更平滑
+            'use_sim_time':      True,       # 实机用 False; sim launch 里改成 use_sim_time
+        }],
+        condition=IfCondition(use_joy),
+        output='screen',
+    )
+
+    # 手柄 -> OCS2 目标位姿节点
+    joy_target_node = Node(
+        package='tracer_jaka_ocs2',
+        executable='tracer_jaka_joy_target_node',
+        name='tracer_jaka_joy_target_node',
+        output='screen',
+        parameters=[{
+            'robot_name':    'mobile_manipulator',
+            'marker_frame':  'odom',
+            'ee_frame':      'gripper_center_link',
+            'input_dim':     8,
+            'joy_topic':     '/joy',
+            'publish_rate':  50.0,
+            'linear_speed':  0.15,
+            'angular_speed': 0.6,
+            'deadzone':      0.10,
+            'use_sim_time':  False,           # sim launch 里改成 use_sim_time
+            # 如果是 PS4/PS5 手柄, 这里覆盖默认的轴/键映射即可
+            # 'axis_x': 1, 'axis_y': 0, 'axis_z': 4, 'axis_yaw': 3,
+            # 'button_deadman': 4, 'button_reset': 0, 'button_home': 1,
+        }],
+        condition=IfCondition(use_joy),
+    )
+
+
     # --------- 时序 ---------
     # OCS2 编译 codegen 比较慢, 控制器也需要 ~5s 才能起来,
     # 所以延迟启动, 等 odom / joint_states 流出来后再起 OCS2
     ocs2_delayed = TimerAction(period=8.0,
-                               actions=[mpc_node, mrt_node, target_node])
+                               actions=[mpc_node, mrt_node, target_node, joy_driver, joy_target_node])
     rviz_delayed = TimerAction(period=4.0, actions=[rviz_node])
 
     return LaunchDescription(

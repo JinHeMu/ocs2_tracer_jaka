@@ -21,7 +21,7 @@ int main(void)
     cout << "robot enable" << endl;
     std::this_thread::sleep_for(std::chrono::seconds(4));
     //Joint-space first-order low-pass filtering in robot servo mode
-    robot.servo_move_use_joint_LPF(0.5);
+    robot.servo_move_use_joint_LPF(2);
     
     robot.set_torque_sensor_mode(1); 
       
