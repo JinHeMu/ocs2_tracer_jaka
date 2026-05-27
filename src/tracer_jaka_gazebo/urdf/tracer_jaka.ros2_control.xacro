@@ -22,7 +22,7 @@
           <!-- 实机硬件接口示意：替换为 Tracer + Jaka 的真实硬件接口 -->
           <!-- <plugin>fake_components/GenericSystem</plugin> -->
            <plugin>jaka_hardware_interface/JakaHardwareInterface</plugin>
-                           <param name="robot_ip">10.5.5.100</param>
+                <param name="robot_ip">10.5.5.100</param>
                 <param name="local_ip">10.5.5.203</param>
                 
                 <!-- 力传感器偏置 -->
@@ -46,24 +46,28 @@
         </xacro:unless>
       </hardware>
 
-      <!-- ============ 差速底盘：两个驱动轮（速度控制） ============
-      <joint name="left_wheel">
-        <command_interface name="velocity">
-          <param name="min">-10.0</param>
-          <param name="max"> 10.0</param>
-        </command_interface>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
 
-      <joint name="right_wheel">
-        <command_interface name="velocity">
-          <param name="min">-10.0</param>
-          <param name="max"> 10.0</param>
-        </command_interface>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint> -->
+        <xacro:if value="${sim_mode}">
+                
+          <joint name="left_wheel">
+            <command_interface name="velocity">
+              <param name="min">-10.0</param>
+              <param name="max"> 10.0</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </joint>
+
+          <joint name="right_wheel">
+            <command_interface name="velocity">
+              <param name="min">-10.0</param>
+              <param name="max"> 10.0</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </joint> 
+
+        </xacro:if>
 
       <!-- ============ 6 DOF 机械臂：position + velocity ============ -->
       <!-- 同时声明 position/velocity 两种 command_interface，方便切换不同控制器；
@@ -87,6 +91,20 @@
       <xacro:arm_joint name="joint_4" lower="-1.48" upper="4.62"/>
       <xacro:arm_joint name="joint_5" lower="-6.28" upper="6.28"/>
       <xacro:arm_joint name="joint_6" lower="-6.28" upper="6.28"/>
+
+
+        <xacro:unless value="${sim_mode}">
+              <sensor name="tcp_fts_sensor">
+              <state_interface name="force.x"/>
+              <state_interface name="force.y"/>
+              <state_interface name="force.z"/>
+              <state_interface name="torque.x"/>
+              <state_interface name="torque.y"/>
+              <state_interface name="torque.z"/>
+          </sensor>
+    
+
+        </xacro:unless>
 
     </ros2_control>
 

@@ -204,7 +204,7 @@
                iyy="0.0276040033352521" iyz="0" izz="0.0398165064505868"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 -1.57" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://tracer_jaka_gazebo/resources/second_base/meshes/urbase_base_link.STL"/>
       </geometry>
@@ -216,7 +216,7 @@
     </collision>
   </link>
   <joint name="tracer_base" type="fixed">
-    <origin rpy="0 0 1.57" xyz="0 0 0.218"/>
+    <origin rpy="0 0 3.14" xyz="0 0 0.218"/>
     <parent link="base_link"/>
     <child  link="urbase_base_link"/>
   </joint>
@@ -233,7 +233,7 @@
   <joint name="base_to_jaka" type="fixed">
     <parent link="base_link"/>
     <child  link="jaka_base_link"/>
-    <origin rpy="-0.02 0 0" xyz="0 0 0.221"/>
+    <origin rpy="0 0 -1.57" xyz="0 0 0.221"/>
   </joint>
 
   <link name="Link_0">

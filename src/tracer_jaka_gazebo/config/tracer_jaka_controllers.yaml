@@ -89,7 +89,6 @@ jaka_arm_controller:
 
     command_interfaces:
       - position
-      - velocity      # OCS2 同时给位置与速度参考，跟踪更稳
 
     state_interfaces:
       - position

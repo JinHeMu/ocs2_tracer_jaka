@@ -76,7 +76,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'xacro_file',
             default_value=PathJoinSubstitution(
-                [pkg_desc, 'urdf', 'tracer_jaka.urdf_real.xacro'])),
+                [pkg_desc, 'urdf', 'tracer_jaka.urdf.xacro'])),
         DeclareLaunchArgument(
             'urdf_file',
             default_value='/tmp/ocs2_tracer_jaka_real/tracer_jaka.urdf'),
@@ -94,9 +94,6 @@ def generate_launch_description():
             FindExecutable(name='xacro'), ' ',
             xacro_file, ' ',
             'sim_mode:=false ',
-            'real_robot:=true ',
-            'robot_ip:=', robot_ip, ' ',
-            'local_ip:=', local_ip,
         ])
     }
     rsp = Node(
