@@ -4,7 +4,7 @@
     包含：物理 + 用户命令系统 + 传感器系统 + 地面 + 光照
     专为 OCS2 mobile manipulator MPC 验证设计：场地空旷、便于调试
 -->
-<sdf version="1.10">
+<sdf version="1.9">
   <world name="empty">
 
     <!-- 物理引擎 -->

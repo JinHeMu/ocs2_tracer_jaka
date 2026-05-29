@@ -14,7 +14,7 @@ model_information {
   ; base frame of the robot (from URDF)
   baseFrame                       "base_footprint"
   ; end-effector frame of the robot (from URDF)
-  eeFrame                         "gripper_center_link"
+  eeFrame                         "tool0"
 }
 
 model_settings
@@ -228,18 +228,18 @@ jointVelocityLimits
       }
       wheelBasedMobileManipulator
       {
-        (0,0)  -0.1
-        (1,0)  -0.25
+        (0,0)  -0.05
+        (1,0)  -0.1
       }
     }
     arm
     {
-      (0,0)  -2.0
-      (1,0)  -2.0
-      (2,0)  -2.0
-      (3,0)  -2.0
-      (4,0)  -2.0
-      (5,0)  -2.0
+      (0,0)  -0.1
+      (1,0)  -0.1
+      (2,0)  -0.1
+      (3,0)  -0.1
+      (4,0)  -0.1
+      (5,0)  -0.1
     }
   }
 
@@ -260,18 +260,18 @@ jointVelocityLimits
       }
       wheelBasedMobileManipulator
       {
-        (0,0)  0.1
-        (1,0)  0.25
+        (0,0)  0.05
+        (1,0)  0.1
       }
     }
     arm
     {
-      (0,0)  2.0
-      (1,0)  2.0
-      (2,0)  2.0
-      (3,0)  2.0
-      (4,0)  2.0
-      (5,0)  2.0
+      (0,0)  0.1
+      (1,0)  0.1
+      (2,0)  0.1
+      (3,0)  0.1
+      (4,0)  0.1
+      (5,0)  0.1
     }
   }
 }
