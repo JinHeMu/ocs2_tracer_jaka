@@ -65,7 +65,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
         std::vector<std::string>{"joint_1","joint_2","joint_3","joint_4","joint_5","joint_6"});
     declare_parameter<std::string>("base_frame",  "base_footprint");
     declare_parameter<std::string>("world_frame", "odom");
-    declare_parameter<std::string>("ee_frame",    "gripper_center_link");
+    declare_parameter<std::string>("ee_frame",    "tool0");
 
     taskFile_       = get_parameter("taskFile").as_string();
     libFolder_      = get_parameter("libFolder").as_string();

@@ -48,7 +48,7 @@ class TracerJakaJoyTargetNode : public rclcpp::Node {
     // ---- 基础参数 ----
     declare_parameter<std::string>("robot_name",   "mobile_manipulator");
     declare_parameter<std::string>("marker_frame", "odom");
-    declare_parameter<std::string>("ee_frame",     "gripper_center_link");
+    declare_parameter<std::string>("ee_frame",     "tool0");
     declare_parameter<int>("input_dim",            8);
     declare_parameter<std::string>("joy_topic",    "/joy");
 

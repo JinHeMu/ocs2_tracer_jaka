@@ -327,7 +327,7 @@
 
     <link name="urbase_base_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 0 3.14" />
         <geometry>
           <mesh filename="package://tracer_jaka_mujoco/urdf/meshes/urbase_base_link.STL" />
         </geometry>
@@ -524,6 +524,8 @@
         <geometry>
           <mesh filename="package://tracer_jaka_mujoco/urdf/meshes/jk_se_vi_200_link.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="silver">
+        </material>
       </visual>
       <inertial>
         <origin xyz="0 0 0.0051933" rpy="0 0 0" />
@@ -538,10 +540,9 @@
         <geometry>
           <mesh filename="package://tracer_jaka_mujoco/urdf/meshes/tool0.STL" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="silver">
+        </material>
       </visual>
-      <material name="white">
-      <color rgba="0.89412157 0.91372941 0.92549412 1.00000000"/>
-      </material>
       <collision>
         <origin xyz="0 -0.04 0.135" rpy="0 0 0" />
         <geometry>
@@ -561,6 +562,8 @@
         <geometry>
           <mesh filename="package://tracer_jaka_mujoco/urdf/meshes/realsense_d435.stl" />
         </geometry>
+        <material name="silver">
+        </material>
       </visual>
     </link>
 
@@ -755,7 +758,7 @@
   <joint name="tool0_and_camera_link_joint" type="fixed">
     <parent link="jk_se_vi_200_link" />
     <child link="tool0_and_camera_link" />
-    <origin xyz="0 0 0" rpy="0 0 -2.3561945" />
+    <origin xyz="0 0 0" rpy="0 0 -0.7853" />
   </joint>
 
   <joint name="d435i_joint" type="fixed">

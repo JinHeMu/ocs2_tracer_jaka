@@ -21,6 +21,80 @@
         <joint name="tool0_and_camera_link_joint"/>
         <joint name="tool0_joint"/>
     </group>
+       <group_state name="zero" group="jaka_arm">
+        <joint name="joint_1" value="0"/>
+        <joint name="joint_2" value="0"/>
+        <joint name="joint_3" value="0"/>
+        <joint name="joint_4" value="0"/>
+        <joint name="joint_5" value="0"/>
+        <joint name="joint_6" value="0"/>
+    </group_state>
+
+    <group_state name="pose_00" group="arm">
+        <joint name="joint_1" value="-0.515"/>
+        <joint name="joint_2" value="1.5707"/>
+        <joint name="joint_3" value="-1.5707"/>
+        <joint name="joint_4" value="1.5707"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.254"/>
+    </group_state>
+    
+    <group_state name="pose_01" group="arm">
+        <joint name="joint_1" value="0"/>
+        <joint name="joint_2" value="1.5707"/>
+        <joint name="joint_3" value="-1.5707"/>
+        <joint name="joint_4" value="1.5707"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="pose_02" group="arm">
+        <joint name="joint_1" value="1.5707"/>
+        <joint name="joint_2" value="1.0472"/>
+        <joint name="joint_3" value="1.1345"/>
+        <joint name="joint_4" value="1.0472"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="pose_03" group="arm">
+        <joint name="joint_1" value="1.5707"/>
+        <joint name="joint_2" value="0.785398"/>
+        <joint name="joint_3" value="1.6581"/>
+        <joint name="joint_4" value="0.785398"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="pose_04" group="arm">
+        <joint name="joint_1" value="1.5707"/>
+        <joint name="joint_2" value="1.9199"/>
+        <joint name="joint_3" value="-0.5236"/>
+        <joint name="joint_4" value="0.785398"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="pose_05" group="arm">
+        <joint name="joint_1" value="1.5707"/>
+        <joint name="joint_2" value="2.3562"/>
+        <joint name="joint_3" value="-1.5707"/>
+        <joint name="joint_4" value="1.5707"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="pose_06" group="arm">
+        <joint name="joint_1" value="1.5707"/>
+        <joint name="joint_2" value="1.309"/>
+        <joint name="joint_3" value="-1.309"/>
+        <joint name="joint_4" value="1.5707"/>
+        <joint name="joint_5" value="1.5707"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
+    <group_state name="up" group="arm">
+        <joint name="joint_1" value="0"/>
+        <joint name="joint_2" value="1.5707"/>
+        <joint name="joint_3" value="0"/>
+        <joint name="joint_4" value="1.5707"/>
+        <joint name="joint_5" value="3.14159"/>
+        <joint name="joint_6" value="0.785398"/>
+    </group_state>
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="left_wheel"/>
     <passive_joint name="right_wheel"/>

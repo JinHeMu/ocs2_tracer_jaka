@@ -147,7 +147,7 @@ def generate_launch_description():
     mujoco_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [pkg_mujoco, "launch", "ros2_control.launch.py"]
+                [pkg_mujoco, "launch", "bridge.launch.py"]
             )
         )
     )
@@ -185,6 +185,8 @@ def generate_launch_description():
                 "traj_horizon": 0.05,
                 "traj_num_points": 5,
 
+                "use_stamped_cmd": False,
+                
                 # 来自 diff_drive_controller
                 "odom_topic": "/base_controller/odom",
 

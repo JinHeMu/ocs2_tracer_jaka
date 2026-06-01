@@ -41,7 +41,7 @@ class TracerJakaTargetNode : public rclcpp::Node {
   TracerJakaTargetNode() : Node("tracer_jaka_target_node") {
     declare_parameter<std::string>("robot_name",   "mobile_manipulator");
     declare_parameter<std::string>("marker_frame", "odom");
-    declare_parameter<std::string>("ee_frame",     "gripper_center_link");
+    declare_parameter<std::string>("ee_frame",     "tool0");
     declare_parameter<double>("marker_scale",      0.3);
     // mobile_manipulator (轮式) 的 input 维度 = 2(底盘) + 6(臂) = 8
     declare_parameter<int>("input_dim",            8);
