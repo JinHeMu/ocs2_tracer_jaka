@@ -32,32 +32,15 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
-def _ensure_urdf_real(context, *args, **kwargs):
-    """运行 xacro -> 写入临时 .urdf 给 OCS2 与 controller_manager 共用."""
-    xacro_file = context.perform_substitution(LaunchConfiguration('xacro_file'))
-    urdf_out   = context.perform_substitution(LaunchConfiguration('urdf_file'))
-    os.makedirs(os.path.dirname(urdf_out), exist_ok=True)
-    return [
-        ExecuteProcess(
-            cmd=['xacro', xacro_file,
-                 'sim_mode:=false',     # 关掉 gz_ros2_control 块
-                 'real_robot:=true',    # 打开 jaka_hardware_interface 块
-                 '-o', urdf_out],
-            output='screen',
-            shell=False,
-        )
-    ]
-
 
 def generate_launch_description():
     pkg_ocs2     = FindPackageShare('tracer_jaka_ocs2')
-    pkg_desc     = FindPackageShare('tracer_jaka_gazebo')   # 你放 URDF/xacro 的包
+    pkg_mujoco     = FindPackageShare('tracer_jaka_mujoco')   # 你放 URDF/xacro 的包
     pkg_tracer   = FindPackageShare('tracer_base')
 
     # --------- 参数 ---------
     use_rviz   = LaunchConfiguration('use_rviz')
     task_file  = LaunchConfiguration('task_file')
-    xacro_file = LaunchConfiguration('xacro_file')
     urdf_file  = LaunchConfiguration('urdf_file')
     lib_folder = LaunchConfiguration('lib_folder')
     can_port   = LaunchConfiguration('can_port')
@@ -75,12 +58,12 @@ def generate_launch_description():
             default_value=PathJoinSubstitution(
                 [pkg_ocs2, 'config', 'task.info'])),
         DeclareLaunchArgument(
-            'xacro_file',
+            # 名字沿用你原来的 xacro_file，但现在默认指向 MuJoCo 包里的 .urdf
+            "urdf_file",
             default_value=PathJoinSubstitution(
-                [pkg_desc, 'urdf', 'tracer_jaka.urdf.xacro'])),
-        DeclareLaunchArgument(
-            'urdf_file',
-            default_value='/tmp/ocs2_tracer_jaka_real/tracer_jaka.urdf'),
+                [pkg_mujoco, "urdf", "tracer_jaka_zu5_real.urdf"]
+            ),
+        ),
         DeclareLaunchArgument(
             'lib_folder',
             default_value='/tmp/ocs2_tracer_jaka_real/auto_generated'),
@@ -88,14 +71,12 @@ def generate_launch_description():
         DeclareLaunchArgument('joy_device', default_value='/dev/input/js0'),
     ]
 
-    # --------- 1. xacro -> urdf 落盘 ---------
-    convert_urdf = OpaqueFunction(function=_ensure_urdf_real)
 
     # --------- 2. robot_state_publisher ---------
     robot_description = {
         'robot_description': Command([
             FindExecutable(name='xacro'), ' ',
-            xacro_file, ' ',
+            urdf_file, ' ',
             'sim_mode:=false ',
         ])
     }
@@ -189,7 +170,7 @@ def generate_launch_description():
                                   'joint_4','joint_5','joint_6'],
             'base_frame':        'base_footprint',
             'world_frame':       'odom',
-            'ee_frame':          'gripper_center_link',
+            'ee_frame':          'tool0',
         }],
     )
 
@@ -201,7 +182,7 @@ def generate_launch_description():
         parameters=[{
             'robot_name':    'mobile_manipulator',
             'marker_frame':  'odom',
-            'ee_frame':      'gripper_center_link',
+            'ee_frame':      'tool0',
             'marker_scale':  0.3,
             'input_dim':     8,
             'use_sim_time':  False,
@@ -228,7 +209,7 @@ def generate_launch_description():
             'device_id':         0,           # 对应 /dev/input/js0; 多手柄改 1,2...
             'deadzone':          0.05,        # 驱动层死区
             'autorepeat_rate':   20.0,        # 没事件时按这个 Hz 重发, 配合定时器更平滑
-            'use_sim_time':      True,       # 实机用 False; sim launch 里改成 use_sim_time
+            'use_sim_time':      False,       # 实机用 False; sim launch 里改成 use_sim_time
         }],
         condition=IfCondition(use_joy),
         output='screen',
@@ -243,7 +224,7 @@ def generate_launch_description():
         parameters=[{
             'robot_name':    'mobile_manipulator',
             'marker_frame':  'odom',
-            'ee_frame':      'gripper_center_link',
+            'ee_frame':      'tool0',
             'input_dim':     8,
             'joy_topic':     '/joy',
             'publish_rate':  50.0,
@@ -272,7 +253,6 @@ def generate_launch_description():
         actions=[mpc_node, mrt_node, target_node, joy_driver, joy_target_node])
 
     return LaunchDescription(declare_args + [
-        convert_urdf,
         rsp,
         tracer_base,
         controller_manager,
