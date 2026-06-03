@@ -95,7 +95,7 @@ def generate_launch_description():
 
     # ros2_control
     ros2_controllers_path = os.path.join(
-        get_package_share_directory("tracer_jaka_moveit_config"),
+        get_package_share_directory("jaka_driver"),
         "config", "ros2_controllers.yaml",
     )
     ros2_control_node = Node(
@@ -113,26 +113,26 @@ def generate_launch_description():
     )
     jaka_arm_controller_spawner = Node(
         package="controller_manager", executable="spawner",
-        arguments=["jaka_arm_controller", "--controller-manager", "/controller_manager"],
+        arguments=["arm_controller", "--controller-manager", "/controller_manager"],
         output="screen",
     )
-    jaka_admittance_controller_spawner = Node(
+    jaka_servo_controller_spawner = Node(
         package="controller_manager", executable="spawner",
-        arguments=["jaka_admittance_controller", "--controller-manager", "/controller_manager"],
+        arguments=["servo_controller", "--controller-manager", "/controller_manager"],
         output="screen",
     )
     jaka_fts_broadcaster_spawner = Node(
         package="controller_manager", executable="spawner",
-        arguments=["jaka_fts_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["fts_broadcaster", "--controller-manager", "/controller_manager"],
         output="screen",
     )
 
-    delay_jtc_after_admittance = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=jaka_admittance_controller_spawner,
-            on_exit=[jaka_arm_controller_spawner],
-        )
-    )
+    # delay_jtc_after_admittance = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=jaka_admittance_controller_spawner,
+    #         on_exit=[jaka_arm_controller_spawner],
+    #     )
+    # )
 
     # ============ DH AG95 夹爪驱动节点 ============
     # 不再单独起 robot_state_publisher / RViz，夹爪的 TF 由主 RSP 统一发布。
@@ -200,16 +200,17 @@ def generate_launch_description():
         rviz_node,
         move_group_node,
         # ros2_control
-        ros2_control_node,
-        joint_state_broadcaster_spawner,
-        jaka_fts_broadcaster_spawner,
+        #ros2_control_node,
+        #joint_state_broadcaster_spawner,
+        # jaka_fts_broadcaster_spawner,
         # jaka_admittance_controller_spawner,
         # delay_jtc_after_admittance,
-        jaka_arm_controller_spawner,
+        # jaka_arm_controller_spawner,
+        # jaka_servo_controller_spawner,
         # Servo + 手柄
         servo_node,
         container,
         # 夹爪驱动
-        dh_ag95_driver_node,
+        #dh_ag95_driver_node,
     ])
 

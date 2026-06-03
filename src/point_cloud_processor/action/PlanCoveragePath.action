@@ -1,0 +1,26 @@
+# ── Goal ─────────────────────────────────────
+# 输入网格文件路径
+string input_ply_path
+# 输入点云文件路径（用于可选的 3D 可视化叠底）
+string input_pcd_path
+# 输出 CSV 路径（留空则使用参数默认值）
+string output_csv_path
+# 输出 G-code 路径（留空则不生成）
+string output_gcode_path
+---
+# ── Result ───────────────────────────────────
+bool    success
+string  message
+string  output_csv_path
+string  output_gcode_path
+# 路径点总数
+int32   point_count
+# 路径总长度 (m)
+float32 total_length_m
+# 理论覆盖率 (%)
+float32 coverage_percent
+---
+# ── Feedback ─────────────────────────────────
+uint8   stage
+string  stage_description
+float32 progress

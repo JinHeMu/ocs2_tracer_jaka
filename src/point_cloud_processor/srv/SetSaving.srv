@@ -1,0 +1,15 @@
+# ── Request ──────────────────────────────────
+# true = 开始采集, false = 停止采集
+bool   enable
+# 保存目录（空字符串则使用参数默认值）
+string save_dir
+# 采集帧数上限（0 = 不限制）
+int32  max_frames
+---
+# ── Response ─────────────────────────────────
+bool   success
+string message
+# 目前已保存的帧数
+int32  saved_frames
+# 实际使用的保存目录
+string save_dir

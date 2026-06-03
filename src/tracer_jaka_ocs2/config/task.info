@@ -188,8 +188,7 @@ selfCollision
   collisionLinkPairs
   {
 
-    [1] "base_link, gripper_base_link"
-    [2] "urbase_base_link, gripper_base_link"
+
   }
 
   collisionObjectPairs { }

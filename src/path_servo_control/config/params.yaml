@@ -1,0 +1,12 @@
+path_to_servo_controller:
+  ros__parameters:
+    csv_file: '/home/ras/tracer_jaka/outputs/coverage_path.csv'
+    ee_frame: 'gripper_center_link'
+    base_frame: 'world'
+    kp_linear: 15.0         # 建议带上小数点，明确是浮点数
+    kp_angular: 20.0
+    max_linear: 0.8
+    max_angular: 1.0
+    goal_tol_pos: 0.005
+    goal_tol_rot: 0.08
+    control_rate: 125.0

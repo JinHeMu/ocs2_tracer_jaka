@@ -28,7 +28,7 @@ const std::string JOY_TOPIC     = "/joy";
 const std::string TWIST_TOPIC   = "/servo_node/delta_twist_cmds";
 const std::string JOINT_TOPIC   = "/servo_node/delta_joint_cmds";
 const std::string GRIPPER_TOPIC = "/gripper/ctrl";         // ★ 新增
-const std::string EEF_FRAME_ID  = "gripper_center_link";
+const std::string EEF_FRAME_ID  = "tool0";
 const std::string BASE_FRAME_ID = "base_link";
 
 // 夹爪默认参数

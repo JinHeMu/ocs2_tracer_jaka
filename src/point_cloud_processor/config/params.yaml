@@ -1,0 +1,124 @@
+/**:
+  ros__parameters:
+
+    # ─────────────────────────────────────────
+    # 文件路径
+    # ─────────────────────────────────────────
+    paths:
+      input_pcd:      "data/frame_00000.pcd"
+      output_pcd:     "data/cropped_cloud.pcd"
+      output_ply:     "data/processed_mesh.ply"
+      output_csv:     "outputs/coverage_path.csv"
+      output_gcode:   "outputs/coverage_path.gcode"
+
+    # ─────────────────────────────────────────
+    # 空间裁剪 (box_crop)
+    # ─────────────────────────────────────────
+    crop:
+      min_bound: [-2.0, -1.0, -2.0]
+      max_bound: [2.0,  1.0, 2.0]
+
+    # ─────────────────────────────────────────
+    # 预处理 (pre_process)
+    # ─────────────────────────────────────────
+    preprocess:
+      voxel_size: 0.01            # 体素降采样尺寸 (m)
+      sor_nb_neighbors: 30        # 统计滤波邻居数
+      sor_std_ratio: 1.5          # 统计滤波标准差倍数
+      radius_nb_points: 12        # 半径滤波最小点数
+      radius_multiplier: 2.5      # 半径 = voxel_size × 倍数
+      normal_radius_multiplier: 3.0   # 法线估计半径 = voxel_size × 倍数
+      normal_max_nn: 30           # 法线估计最大邻居数
+      orient_tangent_k: 100       # 法线统一方向 K
+      poisson_depth: 9            # 泊松重建深度
+      poisson_density_quantile: 0.1  # 低密度面片剔除分位数
+
+      remove_plane_enable: true
+      plane_distance_threshold: 0.01
+      plane_ransac_n: 3
+      plane_num_iterations: 1000
+
+      keep_largest_cluster_enable: true
+      cluster_eps: 0.03
+      cluster_min_points: 30
+      cluster_min_remaining_points: 50
+
+    # ─────────────────────────────────────────
+    # 路径规划 (mesh_coverage_path)
+    # ─────────────────────────────────────────
+    path_planning:
+      tool_diameter: 0.04         # 工具直径 (m)
+      overlap_ratio: 0.15         # 行间重叠率 (0~1)
+      scan_direction: "x"         # 主扫描方向: "x" 或 "y"
+      # 重采样间距 = step_size / resample_divisor
+      resample_divisor: 8
+      # 路径平滑窗口
+      smooth_path_window: 3
+      smooth_normal_window: 10
+      smooth_direction_window: 8
+      # 跳变点剔除
+      outlier_window: 10
+      outlier_angle_threshold_deg: 45.0
+      # 可视化法向量长度 (m)
+      normal_display_length: 0.015
+
+    # ─────────────────────────────────────────
+    # 节点行为
+    # ─────────────────────────────────────────
+    node:
+      # 动作完成后是否自动触发下一步（pipeline 模式）
+      auto_pipeline: true
+      # 日志级别: DEBUG / INFO / WARN / ERROR
+      log_level: "INFO"
+
+    transform:
+      enable: false                             # false 时输出仍为相机系
+      use_tf: false                             # true=用 tf2 实时查询；false=用下面静态值
+      source_frame: "camera_depth_optical_frame"  # 点云所在坐标系（D435i 直接出图通常是这个）
+      # source_frame: "camera_link"  # 点云所在坐标系（D435i 直接出图通常是这个）
+      target_frame: "odom"                     # 目标世界系，也可填 base_link 等
+      lookup_timeout_sec: 5.0
+      static_translation: [0.0, 0.0, 0.0]       # 离线/无 tf 时使用，填手眼标定平移
+      static_quaternion:  [0.0, 0.0, 0.0, 1.0]  # [x, y, z, w]，填手眼标定旋转
+
+
+    # ─────────────────────────────────────────
+    # 轨迹与点云可视化 (visualizer_node)
+    # ─────────────────────────────────────────
+    visualizer:
+      csv_path:   "/home/a/ocs2_tracer_jaka/outputs/coverage_path.csv"
+      pcd_path:   "/home/a/ocs2_tracer_jaka/data/frame_00000.pcd"
+      frame_id:   "odom"
+      publish_rate_hz: 1.0
+      # CSV 降采样步长（1 = 不降，2 = 每隔 1 个取一个，以此类推）
+      downsample_step: 1
+      # 法向/方向向量在 RViz 中的显示长度 (m)
+      display_length_m: 0.02
+      # 方向向量长度 = display_length_m × direction_scale
+      direction_scale:  0.8
+      # 点云底图的坐标偏移 (m)，用于与机器人坐标系对齐
+      pcd_offset_x: 0.0
+      pcd_offset_y: 0.0
+      pcd_offset_z: 0.0
+      # 轨迹点 y 轴偏移（与规划坐标系对齐）
+      path_offset_y: 0.0
+      # Marker 线宽 (m)
+      normal_line_width:    0.0015
+      direction_line_width: 0.0015
+
+    # ─────────────────────────────────────────
+    # 点云采集保存 (pcd_saver_node)
+    # ─────────────────────────────────────────
+    saver:
+      # 订阅的相机点云话题
+      topic_name: "/camera/camera/depth/color/points"
+      # 保存目录（相对路径或绝对路径均可）
+      save_dir:   "data"
+      # 两帧之间的最小间隔（秒），避免保存过于密集
+      save_interval_sec: 0.5
+      # 启动节点后是否立即开始采集（false = 等待服务调用）
+      auto_start: false
+      # 最大保存帧数（0 = 不限）
+      max_frames: 1
+      # 文件名前缀：prefix_00001.pcd
+      filename_prefix: "frame"

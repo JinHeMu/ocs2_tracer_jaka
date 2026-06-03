@@ -1,0 +1,24 @@
+# ── Goal ─────────────────────────────────────
+# 输入点云文件路径（服务端读取本地 PCD 文件）
+string input_pcd_path
+# 输出网格文件路径
+string output_ply_path
+---
+# ── Result ───────────────────────────────────
+bool   success
+string message
+# 保存网格的实际路径
+string output_ply_path
+# 点云清洗后的点数
+int32  point_count
+# 网格面数
+int32  face_count
+---
+# ── Feedback ─────────────────────────────────
+# 当前处理阶段 (0~4)
+uint8  stage
+# 阶段描述
+string stage_description
+# 当前阶段进度百分比 0~100
+float32 progress
+

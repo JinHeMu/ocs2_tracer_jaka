@@ -1,0 +1,9 @@
+# ── Request ──────────────────────────────────
+# (empty)
+---
+# ── Response ─────────────────────────────────
+bool    is_saving
+int32   saved_frames
+string  save_dir
+float64 save_interval_sec
+string  topic_name

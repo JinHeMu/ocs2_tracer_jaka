@@ -1,13 +1,14 @@
 Panels:
   - Class: rviz_common/Displays
-    Help Height: 70
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /TargetPose1
         - /InteractiveMarkers1
+        - /Path1
       Splitter Ratio: 0.5
-    Tree Height: 231
+    Tree Height: 288
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -120,6 +121,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        d435i_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         fl_castor_link:
           Alpha: 1
           Show Axes: false
@@ -140,15 +146,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        gripper_base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_center_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         inertial_link:
           Alpha: 1
           Show Axes: false
@@ -192,6 +189,15 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        tool0_and_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         urbase_base_link:
           Alpha: 1
           Show Axes: false
@@ -207,8 +213,6 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz_default_plugins/TF
       Enabled: true
-      Filter (blacklist): ""
-      Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: true
@@ -240,6 +244,8 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        d435i_link:
+          Value: true
         fl_castor_link:
           Value: true
         fl_wheel_link:
@@ -247,10 +253,6 @@ Visualization Manager:
         fr_castor_link:
           Value: true
         fr_wheel_link:
-          Value: true
-        gripper_base_link:
-          Value: true
-        gripper_center_link:
           Value: true
         inertial_link:
           Value: true
@@ -271,6 +273,10 @@ Visualization Manager:
         rr_castor_link:
           Value: true
         rr_wheel_link:
+          Value: true
+        tool0:
+          Value: true
+        tool0_and_camera_link:
           Value: true
         urbase_base_link:
           Value: true
@@ -309,10 +315,11 @@ Visualization Manager:
                             Link_6:
                               Link_6_45:
                                 jk_se_vi_200_link:
-                                  gripper_base_link:
-                                    {}
-                                  gripper_center_link:
-                                    {}
+                                  tool0_and_camera_link:
+                                    d435i_link:
+                                      {}
+                                    tool0:
+                                      {}
               left_wheel_link:
                 {}
               right_wheel_link:
@@ -412,13 +419,41 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        joy_target_axes: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /joy_target_axes
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /coverage_path
       Value: true
   Enabled: true
   Global Options:
@@ -444,7 +479,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5
+      Distance: 2.593797445297241
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -459,20 +494,20 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.699999988079071
+      Pitch: 0.28000035881996155
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.7850000262260437
+      Yaw: 6.1581807136535645
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 699
+  Height: 720
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000019b0000025dfc0200000002fb000000100044006900730070006c006100790073010000003f0000016d000000cc00fffffffb0000000a0056006900650077007301000001b2000000ea000000a900ffffff0000021d0000025d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f700000276fc0200000002fb000000100044006900730070006c006100790073010000003d0000015d000000c900fffffffb0000000a0056006900650077007301000001a000000113000000a400ffffff000001540000027600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 958
-  X: 66
-  Y: 32
+  Width: 849
+  X: 177
+  Y: 211

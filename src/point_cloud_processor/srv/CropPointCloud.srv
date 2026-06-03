@@ -1,0 +1,13 @@
+# ── Request ──────────────────────────────────
+string  input_pcd_path
+string  output_pcd_path
+# 裁剪边界（各3个元素）
+float64[3] min_bound
+float64[3] max_bound
+---
+# ── Response ─────────────────────────────────
+bool   success
+string message
+# 裁剪后保留的点数
+int32  point_count
+string output_pcd_path
