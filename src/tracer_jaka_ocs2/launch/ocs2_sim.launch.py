@@ -149,7 +149,10 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [pkg_mujoco, "launch", "bridge.launch.py"]
             )
-        )
+        ),
+            launch_arguments={
+                "viewer": "false",
+            }.items()
     )
 
     # -------------------------------------------------------------------------

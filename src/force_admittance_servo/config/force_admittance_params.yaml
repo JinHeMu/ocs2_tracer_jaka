@@ -1,0 +1,60 @@
+force_admittance_servo:
+  ros__parameters:
+
+    # ── 话题配置 ──────────────────────────────────────────────────────────────
+    # 力矩传感器话题（WrenchStamped），已完成重力补偿、死区、零漂处理
+    wrench_topic: "/jaka_fts_broadcaster/wrench"
+
+    # MoveIt Servo 接收的末端速度话题（TwistStamped）
+    # 对应 jaka_real_config.yaml 中的 cartesian_command_in_topic
+    servo_twist_topic: "/servo_node/delta_twist_cmds"
+
+    # 使能/禁用控制器（std_msgs/Bool）
+    enable_topic: "~/enable"
+
+    # 发布 TwistStamped 时使用的 frame_id
+    # 必须与 jaka_real_config.yaml 中的 robot_link_command_frame 一致
+    control_frame_id: "base_link"
+
+    # ── 控制频率 ──────────────────────────────────────────────────────────────
+    control_rate: 125.0  # Hz，建议与 Servo publish_period 对齐（0.008s = 125Hz）
+
+    # ── 每轴控制模式 ──────────────────────────────────────────────────────────
+    # 顺序：[x, y, z, rx, ry, rz]（控制坐标系 base_link 下）
+    #   0 = DISABLED      — 该轴不控制，速度输出恒为 0
+    #   1 = ADMITTANCE    — 导纳柔顺，响应外力，有刚度回弹
+    #   2 = FORCE_CONTROL — 恒力控制，维持 target_wrench 设定的接触力
+    #
+    # 示例：xy 平面导纳，z 轴恒力压紧，旋转全禁用
+    axis_mode: [1, 1, 2, 0, 0, 0]
+
+    # ── 动力学参数 ────────────────────────────────────────────────────────────
+    # 等效质量 [kg, kg, kg, kg·m², kg·m², kg·m²]
+    # 越小 → 响应越快，越容易震荡；越大 → 响应越慢，越稳定
+    mass: [10.0, 10.0, 10.0, 0.025, 0.025, 0.025]
+
+    # 等效阻尼 [N·s/m, N·s/m, N·s/m, N·m·s/rad, ...]
+    # 临界阻尼参考：D = 2 * sqrt(M * K)
+    damping: [20.0, 20.0, 50.0, 0.25, 0.25, 0.25]
+
+    # 刚度 [N/m, N/m, N/m, N·m/rad, ...]（仅 ADMITTANCE 轴生效）
+    stiffness: [100.0, 100.0, 0.0, 0.0, 0.0, 0.0]
+    # ── 恒力目标 ─────────────────────────────────────────────────────────────
+    # 顺序：[fx, fy, fz, tx, ty, tz]（控制坐标系）
+    # 单位：[N, N, N, Nm, Nm, Nm]
+    #
+    # 符号约定：
+    #   target_wrench[i] 为期望"施加力"方向（正值 = 正轴方向施力）
+    #   传感器测量到的是环境反力（与施加力方向相反）
+    #   平衡时：target_wrench[i] + F_measured[i] = 0
+    #
+    # 示例：沿 -z 方向施加 5N 压紧力 → target_wrench[2] = -5.0
+    #       环境反力为 +5N 时达到平衡
+    target_wrench: [0.0, 0.0, 2.0, 0.0, 0.0, 0.0]
+
+    # ── 速度输出限幅 ──────────────────────────────────────────────────────────
+    max_linear_vel:  1.5  # [m/s]  线速度上限，建议保守初始值
+    max_angular_vel: 2.0 # [rad/s] 角速度上限
+
+    max_linear_accel: 2.0 # [m/s^2] 线加速度上限
+    max_angular_accel:  4.0 # [rad/s^2] 角加速度上限

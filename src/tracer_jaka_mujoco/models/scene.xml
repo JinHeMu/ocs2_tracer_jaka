@@ -1,0 +1,87 @@
+<mujoco model="tracer_jaka_zu5_scene">
+
+  <compiler angle="radian"
+            meshdir="/home/a/mujoco_sim/tracer_jaka_zu5/tracer_jaka_zu5_mjcf/tracer_jaka_zu5/meshes" />
+
+  <!-- 引入机器人描述文件 -->
+  <include file="tracer_jaka_zu5_robot.xml"/>
+
+  <asset>
+    <!-- 地板纹理 -->
+    <texture name="groundplane" type="2d" builtin="checker" mark="edge"
+             rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8"
+             width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texrepeat="5 5"
+              texuniform="true" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <light name="top" pos="0 0 3" dir="0 0 -1" diffuse="0.7 0.7 0.7" />
+
+    <geom name="floor"
+          type="plane"
+          size="10 10 0.05"
+          pos="0 0 0"
+          material="groundplane"
+          contype="1"
+          conaffinity="1"
+          condim="3"
+          friction="2.0 0.01 0.001" />
+
+    <!-- 四周墙体 -->
+    <body name="wall_n" pos="0 3 0.5">
+      <geom type="box" size="4 0.05 2.0"  contype="1" conaffinity="1"
+            rgba="0.8 0.8 0.78 1"/>
+    </body>
+
+    <body name="wall_s" pos="0 -3 0.5">
+      <geom type="box" size="4 0.05 2.0"  contype="1" conaffinity="1"
+            rgba="0.8 0.8 0.78 1"/>
+    </body>
+
+    <body name="wall_e" pos="4 0 0.5">
+      <geom type="box" size="0.05 3 2.0"  contype="1" conaffinity="1"
+            rgba="0.8 0.8 0.78 1"/>
+    </body>
+
+    <body name="wall_w" pos="-4 0 0.5">
+      <geom type="box" size="0.05 3 2.0"  contype="1" conaffinity="1"
+            rgba="0.8 0.8 0.78 1"/>
+    </body>
+
+    <!-- 实验桌 -->
+    <body name="table_1" pos="2.2 0.6 0">
+      <geom name="t1_top" type="box" pos="0 0 0.72" size="0.6 0.4 0.02"
+             contype="1" conaffinity="1" rgba="0.55 0.38 0.22 1"/>
+      <geom name="t1_l1" type="box" pos=" 0.55  0.35 0.36" size="0.03 0.03 0.36"
+             contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
+      <geom name="t1_l2" type="box" pos=" 0.55 -0.35 0.36" size="0.03 0.03 0.36"
+             contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
+      <geom name="t1_l3" type="box" pos="-0.55  0.35 0.36" size="0.03 0.03 0.36"
+             contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
+      <geom name="t1_l4" type="box" pos="-0.55 -0.35 0.36" size="0.03 0.03 0.36"
+             contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
+    </body>
+
+    <!-- 桌上待抓物体 -->
+    <body name="obj_can" pos="2.2 0.6 0.80">
+      <freejoint/>
+      <geom type="cylinder" size="0.035 0.06" mass="0.2"
+             contype="1" conaffinity="1" rgba="0.9 0.2 0.2 1"/>
+    </body>
+
+    <!-- 货架 / 隔断 -->
+    <body name="shelf_1" pos="-1.5 1.8 0">
+      <geom type="box" pos="0 0 0.9" size="0.4 0.05 0.9"
+             contype="1" conaffinity="1" rgba="0.6 0.6 0.65 1"/>
+    </body>
+
+    <!-- 静态箱子障碍 -->
+    <body name="box_obs" pos="1.0 -1.2 0.25">
+      <geom type="box" size="0.25 0.25 0.25"
+             contype="1" conaffinity="1" rgba="0.4 0.5 0.7 1"/>
+    </body>
+
+  </worldbody>
+
+</mujoco>

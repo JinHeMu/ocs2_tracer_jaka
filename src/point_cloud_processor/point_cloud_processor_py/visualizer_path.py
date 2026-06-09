@@ -121,10 +121,10 @@ def visualize_trajectory_with_vectors(csv_file, pcd_file=None, vector_length=0.0
 
 if __name__ == "__main__":
     # 替换为你实际的输出路径
-    CSV_PATH = '/home/ras/tracer_jaka/outputs/coverage_path.csv'
+    CSV_PATH = '/home/a/tracer_jaka/outputs/coverage_path.csv'
     
     # 你可以选择传入剪裁后的点云或者泊松重建后的网格
     # 如果不想显示点云，传入 None 即可
-    PCD_PATH = '/home/ras/tracer_jaka/data/cropped.pcd' 
+    PCD_PATH = '/home/a/tracer_jaka/data/cropped.pcd' 
     
     visualize_trajectory_with_vectors(CSV_PATH, PCD_PATH, vector_length=0.015)

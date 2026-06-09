@@ -1,28 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-mujoco_bridge_node.py  ——  ROS2 <-> MuJoCo 自包含桥接节点
-（不依赖 mujoco_ros2_control / diff_drive_controller；底盘为 3 自由度平面关节）
+mujoco_bridge_node.py —— ROS2 <-> MuJoCo 自包含桥接节点（含 LiDAR + 深度相机）
 
-底盘模型假设（与你的 XML 一致）:
-    <body name="base_footprint">
-        <joint name="base_x"   type="slide" axis="1 0 0"/>
-        <joint name="base_y"   type="slide" axis="0 1 0"/>
-        <joint name="base_yaw" type="hinge" axis="0 0 1"/>
-    => 世界系 x/y 平移 + 绕 z 偏航，三个独立单自由度关节，机器人只在平面运动。
+在原“纯桥接（3 自由度平面底盘 + 6 轴机械臂）”基础上新增：
+  * LiDAR：mujoco_lidar 光线追踪，独立线程，频率/分辨率/扫描模式可配
+  * 深度/RGB 相机：MuJoCo 离屏渲染，主线程抽帧渲染 + 独立线程发布，帧率可配
+  * 传感器频率与物理步进(默认 500Hz)解耦，避免“传感器跟着物理跑导致卡顿”
 
-设计目标
---------
-1. 本节点是仿真唯一的“执行者 + 时间源”：加载 MuJoCo、步进物理、发布 /clock。
-2. 机械臂：兼容 ros2_control 的两种用法
-     - JTC 风格: 订阅 /arm_controller/joint_trajectory，并提供 FollowJointTrajectory action（MoveIt）
-     - Forward 风格: 订阅 /arm_controller/commands (Float64MultiArray)
-3. 底盘：仅用一个 cmd_vel（Twist）控制，不用差速控制器。
-     - 订阅 /cmd_vel 与 /base_controller/cmd_vel
-     - exact_base=True（默认）: 把 cmd_vel 积分成 (x,y,yaw) 直接写回 base_x/base_y/base_yaw，
-       纯运动学跟随，彻底消除速度伺服 + 编码里程带来的稳态偏差。
-4. 输出 OCS2 / MoveIt / RViz 需要的话题:
-     /joint_states  /base_controller/odom  /clock  TF(odom->base_footprint)
+时间源 / 执行者：本节点加载 MuJoCo、步进物理、发布 /clock。
+所有参数（含传感器）均可由 config/sensors.yaml 提供。
 """
 
 import math
@@ -48,6 +35,9 @@ from nav_msgs.msg import Odometry
 from trajectory_msgs.msg import JointTrajectory
 from control_msgs.action import FollowJointTrajectory
 from tf2_ros import TransformBroadcaster
+
+from .lidar_sensor import LidarSensor
+from .camera_sensor import CameraSensor
 
 
 ARM_JOINTS = ["joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"]
@@ -78,9 +68,8 @@ class MujocoBridge(Node):
     def __init__(self):
         super().__init__("mujoco_bridge")
 
-        # ---------------- 参数 ----------------
+        # ---------------- 基本参数 ----------------
         self.declare_parameter("model_path", "")
-        # 平面底盘三个关节名（按你的 XML）
         self.declare_parameter("base_x_joint", "base_x")
         self.declare_parameter("base_y_joint", "base_y")
         self.declare_parameter("base_yaw_joint", "base_yaw")
@@ -91,10 +80,43 @@ class MujocoBridge(Node):
         self.declare_parameter("odom_frame", "odom")
         self.declare_parameter("base_frame", "base_footprint")
         self.declare_parameter("publish_odom_tf", True)
-        self.declare_parameter("exact_base", True)   # True: 平面运动学底盘，零偏差
-        self.declare_parameter("spin_wheels", True)   # 仅视觉：让轮子转
+        self.declare_parameter("exact_base", True)
+        self.declare_parameter("spin_wheels", True)
         self.declare_parameter("use_viewer", True)
         self.declare_parameter("arm_actuator_suffix", "_servo")
+        self.declare_parameter("init_keyframe", "home")
+
+        # ---------------- LiDAR 参数 ----------------
+        self.declare_parameter("lidar.enable", False)
+        self.declare_parameter("lidar.site_name", "lidar_site")
+        self.declare_parameter("lidar.frame_id", "lidar_link")
+        self.declare_parameter("lidar.topic", "/lidar/points")
+        self.declare_parameter("lidar.rate", 25.0)
+        self.declare_parameter("lidar.backend", "cpu")          # cpu | taichi
+        self.declare_parameter("lidar.cutoff_dist", 5.0)
+        self.declare_parameter("lidar.pattern", "grid")         # grid | HDL64 | ...
+        self.declare_parameter("lidar.num_ray_cols", 64)
+        self.declare_parameter("lidar.num_ray_rows", 16)
+        self.declare_parameter("lidar.taichi_device_memory_gb", 2.0)
+
+        # ---------------- 相机参数 ----------------
+        self.declare_parameter("camera.enable", False)
+        self.declare_parameter("camera.camera_name", "d435_depth")
+        self.declare_parameter("camera.width", 640)
+        self.declare_parameter("camera.height", 480)
+        self.declare_parameter("camera.fovy", 58.0)
+        self.declare_parameter("camera.rate", 15.0)
+        self.declare_parameter("camera.color_frame_id", "camera_color_optical_frame")
+        self.declare_parameter("camera.depth_frame_id", "camera_depth_optical_frame")
+        self.declare_parameter("camera.color_topic", "/camera/color/image_raw")
+        self.declare_parameter("camera.color_info_topic", "/camera/color/camera_info")
+        self.declare_parameter("camera.depth_topic", "/camera/depth/image_raw")
+        self.declare_parameter("camera.depth_info_topic", "/camera/depth/camera_info")
+        self.declare_parameter("camera.publish_color", True)
+        self.declare_parameter("camera.publish_depth", True)
+        self.declare_parameter("camera.publish_camera_info", True)
+        self.declare_parameter("camera.max_depth", 5.0)
+        self.declare_parameter("camera.clip_far_to_zero", True)
 
         gp = lambda n: self.get_parameter(n).value
         self.model_path = gp("model_path")
@@ -112,26 +134,24 @@ class MujocoBridge(Node):
         self.spin_wheels = bool(gp("spin_wheels"))
         self.use_viewer = bool(gp("use_viewer"))
         arm_suffix = gp("arm_actuator_suffix")
+        init_key = gp("init_keyframe")
 
         if not self.model_path:
-            raise RuntimeError("必须通过参数 model_path 指定 MuJoCo XML 路径")
+            raise RuntimeError("必须通过参数 model_path 指定 MuJoCo XML 路径（建议指向 scene.xml）")
 
         # ---------------- 加载模型 ----------------
         self.model = mujoco.MjModel.from_xml_path(self.model_path)
         self.data = mujoco.MjData(self.model)
         self.dt = self.model.opt.timestep
 
-        key_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_KEY, "home")
+        key_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_KEY, init_key)
         if key_id < 0:
-            raise RuntimeError("找不到 keyframe: home")
-
+            raise RuntimeError(f"找不到 keyframe: {init_key}")
         mujoco.mj_resetDataKeyframe(self.model, self.data, key_id)
         mujoco.mj_forward(self.model, self.data)
 
-
         nid = lambda t, n: mujoco.mj_name2id(self.model, t, n)
 
-        # 臂关节 + 轮关节 + 三个底盘关节的 qpos/qvel 地址
         self.qadr, self.dadr = {}, {}
         for j in ARM_JOINTS + WHEELS + [self.bx_name, self.by_name, self.byaw_name]:
             i = nid(mujoco.mjtObj.mjOBJ_JOINT, j)
@@ -145,12 +165,12 @@ class MujocoBridge(Node):
             if j not in self.qadr:
                 raise RuntimeError(f"找不到底盘关节: {j}")
 
-        # 臂位置执行器（轮子默认无执行器，纯运动学转动）
         self.a_arm = [nid(mujoco.mjtObj.mjOBJ_ACTUATOR, f"{j}{arm_suffix}")
                       for j in ARM_JOINTS]
 
-        # ---------------- 状态 ----------------
-        self.lock = threading.Lock()
+        # ---------------- 状态 / 锁 ----------------
+        self.lock = threading.Lock()          # 保护 cmd / arm 目标
+        self.physics_lock = threading.Lock()  # 保护 mj_step 与传感器快照
         self.cmd_v = 0.0
         self.cmd_w = 0.0
         self.arm_target = np.array(
@@ -158,14 +178,11 @@ class MujocoBridge(Node):
         self.arm_traj = None
         self.traj_start = 0.0
 
-        # 底盘里程（从模型初值读起）
         self.base_x = float(self.data.qpos[self.qadr[self.bx_name]])
         self.base_y = float(self.data.qpos[self.qadr[self.by_name]])
         self.base_yaw = float(self.data.qpos[self.qadr[self.byaw_name]])
-        # 轮子显示角度
         self.wheel_pos = {w: (float(self.data.qpos[self.qadr[w]]) if w in self.qadr else 0.0)
                           for w in WHEELS}
-
         self.sim_time = 0.0
 
         # ---------------- ROS 接口 ----------------
@@ -192,8 +209,60 @@ class MujocoBridge(Node):
             cancel_callback=lambda g: CancelResponse.ACCEPT,
             callback_group=cb)
 
+        # ---------------- 传感器 ----------------
+        self.lidar = None
+        self.camera = None
+        if bool(gp("lidar.enable")):
+            self.lidar = LidarSensor(self, {
+                "site_name": gp("lidar.site_name"),
+                "frame_id": gp("lidar.frame_id"),
+                "topic": gp("lidar.topic"),
+                "rate": gp("lidar.rate"),
+                "backend": gp("lidar.backend"),
+                "cutoff_dist": gp("lidar.cutoff_dist"),
+                "pattern": gp("lidar.pattern"),
+                "num_ray_cols": gp("lidar.num_ray_cols"),
+                "num_ray_rows": gp("lidar.num_ray_rows"),
+                "taichi_device_memory_gb": gp("lidar.taichi_device_memory_gb"),
+            })
+        if bool(gp("camera.enable")):
+            self.camera = CameraSensor(self, {
+                "camera_name": gp("camera.camera_name"),
+                "width": gp("camera.width"),
+                "height": gp("camera.height"),
+                "fovy": gp("camera.fovy"),
+                "rate": gp("camera.rate"),
+                "color_frame_id": gp("camera.color_frame_id"),
+                "depth_frame_id": gp("camera.depth_frame_id"),
+                "color_topic": gp("camera.color_topic"),
+                "color_info_topic": gp("camera.color_info_topic"),
+                "depth_topic": gp("camera.depth_topic"),
+                "depth_info_topic": gp("camera.depth_info_topic"),
+                "publish_color": gp("camera.publish_color"),
+                "publish_depth": gp("camera.publish_depth"),
+                "publish_camera_info": gp("camera.publish_camera_info"),
+                "max_depth": gp("camera.max_depth"),
+                "clip_far_to_zero": gp("camera.clip_far_to_zero"),
+            })
+
         self.get_logger().info(
             f"Loaded {self.model_path}  dt={self.dt:.4f}  exact_base={self.exact_base}")
+
+    # ---------- 给传感器线程用的统一时间戳 ----------
+    def now_msg(self):
+        return secs_to_time_msg(self.sim_time)
+
+    def start_sensors(self):
+        if self.lidar:
+            self.lidar.start()
+        if self.camera:
+            self.camera.start()
+
+    def stop_sensors(self):
+        if self.lidar:
+            self.lidar.stop()
+        if self.camera:
+            self.camera.stop()
 
     # ============================================================
     #  订阅回调
@@ -287,7 +356,7 @@ class MujocoBridge(Node):
                 return q0 + a * (q1 - q0)
         return traj[-1][1]
 
-    def apply_arm_ctrl(self):
+    def _apply_arm_ctrl(self):
         with self.lock:
             self.arm_target = self._interp_arm()
             arm = self.arm_target.copy()
@@ -296,10 +365,6 @@ class MujocoBridge(Node):
                 self.data.ctrl[aid] = arm[k]
 
     def _integrate_planar_base(self):
-        """
-        平面运动学底盘：用 cmd_vel 积分位姿，直接写回 base_x/base_y/base_yaw。
-        采用中点偏航以减小转弯时的积分误差。
-        """
         with self.lock:
             v, w = self.cmd_v, self.cmd_w
         dt = self.dt
@@ -308,16 +373,13 @@ class MujocoBridge(Node):
         self.base_y += v * math.sin(yaw_mid) * dt
         self.base_yaw = wrap_pi(self.base_yaw + w * dt)
 
-        # 写回位姿（覆盖物理积分结果 -> 纯运动学跟随）
         self.data.qpos[self.qadr[self.bx_name]] = self.base_x
         self.data.qpos[self.qadr[self.by_name]] = self.base_y
         self.data.qpos[self.qadr[self.byaw_name]] = self.base_yaw
-        # 写回速度（世界系线速度 + yaw 速率），使上报 twist 精确
         self.data.qvel[self.dadr[self.bx_name]] = v * math.cos(self.base_yaw)
         self.data.qvel[self.dadr[self.by_name]] = v * math.sin(self.base_yaw)
         self.data.qvel[self.dadr[self.byaw_name]] = w
 
-        # 轮子视觉旋转（纯运动学）
         if self.spin_wheels:
             wl = (v - w * self.wheel_sep / 2.0) / self.wheel_rad
             wr = (v + w * self.wheel_sep / 2.0) / self.wheel_rad
@@ -328,11 +390,13 @@ class MujocoBridge(Node):
                     self.data.qvel[self.dadr[name]] = omega
 
     def step(self):
-        self.apply_arm_ctrl()
-        mujoco.mj_step(self.model, self.data)
-        if self.exact_base:
-            self._integrate_planar_base()
-            mujoco.mj_forward(self.model, self.data)  # 刷新运动学供 viewer / 读取
+        """单步物理。整段在 physics_lock 内，保证传感器快照拿到一致状态。"""
+        with self.physics_lock:
+            self._apply_arm_ctrl()
+            mujoco.mj_step(self.model, self.data)
+            if self.exact_base:
+                self._integrate_planar_base()
+                mujoco.mj_forward(self.model, self.data)
         self.sim_time += self.dt
 
     # ============================================================
@@ -346,7 +410,6 @@ class MujocoBridge(Node):
     def publish_state(self):
         now = secs_to_time_msg(self.sim_time)
 
-        # joint_states
         js = JointState()
         js.header.stamp = now
         names = [j for j in ARM_JOINTS + WHEELS if j in self.qadr]
@@ -355,7 +418,6 @@ class MujocoBridge(Node):
         js.velocity = [float(self.data.qvel[self.dadr[j]]) for j in names]
         self.js_pub.publish(js)
 
-        # 位姿（平面三关节直接读）
         x = float(self.data.qpos[self.qadr[self.bx_name]])
         y = float(self.data.qpos[self.qadr[self.by_name]])
         yaw = float(self.data.qpos[self.qadr[self.byaw_name]])
@@ -403,12 +465,15 @@ def _run_loop(node, with_viewer):
         next_wall = time.perf_counter()
         while rclpy.ok() and (viewer is None or viewer.is_running()):
             node.step()
+
             if step % clk_decim == 0:
                 node.publish_clock()
             if step % pub_decim == 0:
                 node.publish_state()
+            # 相机渲染已移至相机自身的工作线程（独立 EGL 上下文），主循环不再渲染
             if viewer is not None:
                 viewer.sync()
+
             step += 1
             next_wall += node.dt
             sleep = next_wall - time.perf_counter()
@@ -419,15 +484,15 @@ def _run_loop(node, with_viewer):
 
     if with_viewer:
         with mujoco.viewer.launch_passive(
-            node.model,
-            node.data,
-            show_left_ui=False,
-            show_right_ui=False,
+            node.model, node.data,
+            show_left_ui=False, show_right_ui=False,
         ) as viewer:
+            node.start_sensors()
             body(viewer)
-
     else:
+        node.start_sensors()
         body(None)
+
 
 
 def main():
@@ -443,6 +508,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
+        node.stop_sensors()
         node.destroy_node()
         rclpy.shutdown()
 

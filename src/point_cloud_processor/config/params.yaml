@@ -15,8 +15,8 @@
     # 空间裁剪 (box_crop)
     # ─────────────────────────────────────────
     crop:
-      min_bound: [-2.0, -1.0, -2.0]
-      max_bound: [2.0,  1.0, 2.0]
+      min_bound: [-10.0, -10.0, -20.0]
+      max_bound: [10.0,  10.0, 20.0]
 
     # ─────────────────────────────────────────
     # 预处理 (pre_process)
@@ -33,7 +33,7 @@
       poisson_depth: 9            # 泊松重建深度
       poisson_density_quantile: 0.1  # 低密度面片剔除分位数
 
-      remove_plane_enable: true
+      remove_plane_enable: false
       plane_distance_threshold: 0.01
       plane_ransac_n: 3
       plane_num_iterations: 1000
@@ -47,21 +47,17 @@
     # 路径规划 (mesh_coverage_path)
     # ─────────────────────────────────────────
     path_planning:
-      tool_diameter: 0.04         # 工具直径 (m)
-      overlap_ratio: 0.15         # 行间重叠率 (0~1)
-      scan_direction: "x"         # 主扫描方向: "x" 或 "y"
-      # 重采样间距 = step_size / resample_divisor
-      resample_divisor: 8
-      # 路径平滑窗口
-      smooth_path_window: 3
-      smooth_normal_window: 10
-      smooth_direction_window: 8
-      # 跳变点剔除
-      outlier_window: 10
-      outlier_angle_threshold_deg: 45.0
-      # 可视化法向量长度 (m)
-      normal_display_length: 0.015
+      tool_diameter: 0.04
+      overlap_ratio: 0.15
+      scan_direction: 'x'
 
+      resample_divisor: 16
+      smooth_path_window: 8
+      smooth_normal_window: 20
+      smooth_direction_window: 12
+
+      outlier_window: 12
+      outlier_angle_threshold_deg: 35.0
     # ─────────────────────────────────────────
     # 节点行为
     # ─────────────────────────────────────────
@@ -99,7 +95,7 @@
       # 点云底图的坐标偏移 (m)，用于与机器人坐标系对齐
       pcd_offset_x: 0.0
       pcd_offset_y: 0.0
-      pcd_offset_z: 0.0
+      pcd_offset_z: 0.02
       # 轨迹点 y 轴偏移（与规划坐标系对齐）
       path_offset_y: 0.0
       # Marker 线宽 (m)

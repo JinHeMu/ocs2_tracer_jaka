@@ -2,27 +2,30 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>tracer_jaka_mujoco</name>
-  <version>0.1.0</version>
-  <description>Tracer + JAKA Zu5 移动机械臂的 MuJoCo 仿真与 ROS2 控制功能包</description>
+  <version>0.2.0</version>
+  <description>ROS2 &lt;-&gt; MuJoCo 桥接（3 自由度平面底盘 + JAKA Zu5 机械臂 + LiDAR + 深度相机）</description>
   <maintainer email="you@example.com">you</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>
 
   <exec_depend>rclpy</exec_depend>
-  <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>trajectory_msgs</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <exec_depend>rosgraph_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>xacro</exec_depend>
 
-  <!-- 方式 B（标准 ros2_control 栈）所需，按需安装 -->
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>joint_trajectory_controller</exec_depend>
-  <exec_depend>diff_drive_controller</exec_depend>
-  <exec_depend>joint_state_broadcaster</exec_depend>
+  <!-- pip 安装: mujoco, mujoco_lidar, numpy -->
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

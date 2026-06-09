@@ -42,12 +42,12 @@ def generate_launch_description():
             description='YAML 参数文件路径'),
         DeclareLaunchArgument(
             'csv_path',
-            default_value='/home/ras/tracer_jaka/outputs/coverage_path.csv',
+            default_value='/home/a/tracer_jaka/outputs/coverage_path.csv',
             description='覆盖 visualizer.csv_path'
         ),
         DeclareLaunchArgument(
             'pcd_path',
-            default_value='/home/ras/tracer_jaka/data/cropped.pcd',
+            default_value='/home/a/tracer_jaka/data/cropped.pcd',
             description='覆盖 visualizer.pcd_path'
         ),
         DeclareLaunchArgument(

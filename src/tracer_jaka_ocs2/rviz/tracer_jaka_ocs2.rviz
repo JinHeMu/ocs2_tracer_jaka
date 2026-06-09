@@ -4,11 +4,20 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
+        - /Status1
+        - /Grid1
         - /TargetPose1
         - /InteractiveMarkers1
         - /Path1
+        - /Image1
+        - /Image1/Topic1
+        - /Image2
+        - /Image2/Topic1
+        - /PointCloud21
+        - /PointCloud21/Topic1
       Splitter Ratio: 0.5
-    Tree Height: 288
+    Tree Height: 803
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -20,7 +29,7 @@ Visualization Manager:
     - Alpha: 0.5
       Cell Size: 1
       Class: rviz_default_plugins/Grid
-      Color: 160; 160; 164
+      Color: 255; 255; 255
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
@@ -212,128 +221,19 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz_default_plugins/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        Link_0:
-          Value: true
-        Link_1:
-          Value: true
-        Link_2:
-          Value: true
-        Link_3:
-          Value: true
-        Link_4:
-          Value: true
-        Link_5:
-          Value: true
-        Link_6:
-          Value: true
-        Link_6_45:
-          Value: true
-        aluminium_2_base_link:
-          Value: true
-        aluminium_3_base_link:
-          Value: true
-        aluminium_4_base_link:
-          Value: true
-        aluminium_base_link:
-          Value: true
-        base_footprint:
-          Value: true
-        base_link:
-          Value: true
-        d435i_link:
-          Value: true
-        fl_castor_link:
-          Value: true
-        fl_wheel_link:
-          Value: true
-        fr_castor_link:
-          Value: true
-        fr_wheel_link:
-          Value: true
-        inertial_link:
-          Value: true
-        jaka_base_link:
-          Value: true
-        jk_se_vi_200_link:
-          Value: true
-        left_wheel_link:
-          Value: true
-        odom:
-          Value: true
-        right_wheel_link:
-          Value: true
-        rl_castor_link:
-          Value: true
-        rl_wheel_link:
-          Value: true
-        rr_castor_link:
-          Value: true
-        rr_wheel_link:
-          Value: true
-        tool0:
-          Value: true
-        tool0_and_camera_link:
-          Value: true
-        urbase_base_link:
-          Value: true
       Marker Scale: 0.5
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        odom:
-          base_footprint:
-            base_link:
-              aluminium_2_base_link:
-                {}
-              aluminium_3_base_link:
-                {}
-              aluminium_4_base_link:
-                {}
-              aluminium_base_link:
-                {}
-              fl_castor_link:
-                fl_wheel_link:
-                  {}
-              fr_castor_link:
-                fr_wheel_link:
-                  {}
-              inertial_link:
-                {}
-              jaka_base_link:
-                Link_0:
-                  Link_1:
-                    Link_2:
-                      Link_3:
-                        Link_4:
-                          Link_5:
-                            Link_6:
-                              Link_6_45:
-                                jk_se_vi_200_link:
-                                  tool0_and_camera_link:
-                                    d435i_link:
-                                      {}
-                                    tool0:
-                                      {}
-              left_wheel_link:
-                {}
-              right_wheel_link:
-                {}
-              rl_castor_link:
-                rl_wheel_link:
-                  {}
-              rr_castor_link:
-                rr_wheel_link:
-                  {}
-              urbase_base_link:
-                {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: MPC_TargetTrajectories
@@ -391,7 +291,7 @@ Visualization Manager:
       Axes Radius: 0.10000000149011612
       Class: rviz_default_plugins/Pose
       Color: 255; 25; 0
-      Enabled: true
+      Enabled: false
       Head Length: 0.30000001192092896
       Head Radius: 0.10000000149011612
       Name: TargetPose
@@ -405,7 +305,7 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /target_pose
-      Value: true
+      Value: false
     - Class: rviz_default_plugins/InteractiveMarkers
       Enable Transparency: true
       Enabled: true
@@ -416,17 +316,17 @@ Visualization Manager:
       Show Visual Aids: false
       Value: true
     - Class: rviz_default_plugins/MarkerArray
-      Enabled: true
+      Enabled: false
       Name: MarkerArray
       Namespaces:
-        joy_target_axes: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /joy_target_axes
-      Value: true
+      Value: false
     - Alpha: 1
       Buffer Length: 1
       Class: rviz_default_plugins/Path
@@ -455,9 +355,71 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /coverage_path
       Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /camera/color/image_raw
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /camera/depth/image_raw
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /lidar/points
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 154; 153; 150
     Fixed Frame: odom
     Frame Rate: 30
   Name: root
@@ -479,7 +441,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.593797445297241
+      Distance: 6.185178279876709
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -494,20 +456,22 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.28000035881996155
+      Pitch: 0.5800006985664368
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 6.1581807136535645
+      Yaw: 1.3399968147277832
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 720
+  Height: 1798
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000001f700000276fc0200000002fb000000100044006900730070006c006100790073010000003d0000015d000000c900fffffffb0000000a0056006900650077007301000001a000000113000000a400ffffff000001540000027600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f70000066afc0200000004fb000000100044006900730070006c006100790073010000006e000003910000018200fffffffb0000000a00560069006500770073010000040b000002cd0000013200fffffffb0000000a0049006d0061006700650300000a16000004c4000001f7000000ebfb0000000a0049006d0061006700650300000a16000005ac000001f7000000eb0000073b0000066a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 849
-  X: 177
-  Y: 211
+  Width: 2366
+  X: 1156
+  Y: 200
