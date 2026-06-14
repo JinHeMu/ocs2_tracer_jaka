@@ -39,7 +39,7 @@ mujoco_bridge:
     #  LiDAR（mujoco_lidar 光线追踪，独立线程）
     # =================================================================
     lidar:
-      enable: true
+      enable: false
       site_name: "lidar_site"        # 必须与 XML 中 <site name=.../> 一致
       frame_id: "lidar_link"         # 点云坐标系，由桥接发 base_footprint->lidar_link
       topic: "/lidar/points"
@@ -55,12 +55,12 @@ mujoco_bridge:
     #  深度 / RGB 相机（MuJoCo 离屏渲染）
     # =================================================================
     camera:
-      enable: true
+      enable: false
       camera_name: "d435_depth"      # 必须与 XML 中 <camera name=.../> 一致
       width: 640
       height: 480
       fovy: 58.0                     # 垂直 FOV(度)，与 XML 的 fovy 保持一致
-      rate: 1.0                    # 渲染/发布帧率(Hz)
+      rate: 30.0                    # 渲染/发布帧率(Hz)
       color_frame_id: "camera_color_optical_frame"
       depth_frame_id: "camera_depth_optical_frame"
       color_topic: "/camera/color/image_raw"

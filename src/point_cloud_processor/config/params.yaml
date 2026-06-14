@@ -15,8 +15,8 @@
     # 空间裁剪 (box_crop)
     # ─────────────────────────────────────────
     crop:
-      min_bound: [-10.0, -10.0, -20.0]
-      max_bound: [10.0,  10.0, 20.0]
+      min_bound: [-2.0, -1.0, -2.0]
+      max_bound: [2.0,  1.0, 2.0]
 
     # ─────────────────────────────────────────
     # 预处理 (pre_process)
@@ -28,10 +28,10 @@
       radius_nb_points: 12        # 半径滤波最小点数
       radius_multiplier: 2.5      # 半径 = voxel_size × 倍数
       normal_radius_multiplier: 3.0   # 法线估计半径 = voxel_size × 倍数
-      normal_max_nn: 30           # 法线估计最大邻居数
+      normal_max_nn: 100           # 法线估计最大邻居数
       orient_tangent_k: 100       # 法线统一方向 K
       poisson_depth: 9            # 泊松重建深度
-      poisson_density_quantile: 0.1  # 低密度面片剔除分位数
+      poisson_density_quantile: 0.01  # 低密度面片剔除分位数
 
       remove_plane_enable: false
       plane_distance_threshold: 0.01
@@ -43,12 +43,23 @@
       cluster_min_points: 30
       cluster_min_remaining_points: 50
 
+      plane_candidate_count: 5
+      plane_min_points: 1000
+      keep_largest_plane_patch_enable: true
+      plane_distance_threshold: 0.01
+      plane_ransac_n: 3
+      plane_num_iterations: 1000
+      cluster_eps: 0.03
+      cluster_min_points: 30
+      cluster_min_remaining_points: 50
+
+
     # ─────────────────────────────────────────
     # 路径规划 (mesh_coverage_path)
     # ─────────────────────────────────────────
     path_planning:
-      tool_diameter: 0.04
-      overlap_ratio: 0.15
+      tool_diameter: 0.025
+      overlap_ratio: 0.05
       scan_direction: 'x'
 
       resample_divisor: 16
@@ -82,9 +93,9 @@
     # 轨迹与点云可视化 (visualizer_node)
     # ─────────────────────────────────────────
     visualizer:
-      csv_path:   "/home/a/ocs2_tracer_jaka/outputs/coverage_path.csv"
-      pcd_path:   "/home/a/ocs2_tracer_jaka/data/frame_00000.pcd"
-      frame_id:   "odom"
+      csv_path:   "/home/a/tracer_jaka/outputs/coverage_path.csv"
+      pcd_path:   "/home/a/tracer_jaka/data/frame_00000.pcd"
+      frame_id:   "odom"  # 可视化时点云和轨迹的坐标系，通常与 TF 中的目标坐标系一致
       publish_rate_hz: 1.0
       # CSV 降采样步长（1 = 不降，2 = 每隔 1 个取一个，以此类推）
       downsample_step: 1
@@ -95,7 +106,7 @@
       # 点云底图的坐标偏移 (m)，用于与机器人坐标系对齐
       pcd_offset_x: 0.0
       pcd_offset_y: 0.0
-      pcd_offset_z: 0.02
+      pcd_offset_z: 0.0
       # 轨迹点 y 轴偏移（与规划坐标系对齐）
       path_offset_y: 0.0
       # Marker 线宽 (m)

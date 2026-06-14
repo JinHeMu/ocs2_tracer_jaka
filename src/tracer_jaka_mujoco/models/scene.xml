@@ -50,7 +50,7 @@
     </body>
 
     <!-- 实验桌 -->
-    <body name="table_1" pos="2.2 0.6 0">
+    <!-- <body name="table_1" pos="2.2 0.6 0">
       <geom name="t1_top" type="box" pos="0 0 0.72" size="0.6 0.4 0.02"
              contype="1" conaffinity="1" rgba="0.55 0.38 0.22 1"/>
       <geom name="t1_l1" type="box" pos=" 0.55  0.35 0.36" size="0.03 0.03 0.36"
@@ -61,26 +61,26 @@
              contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
       <geom name="t1_l4" type="box" pos="-0.55 -0.35 0.36" size="0.03 0.03 0.36"
              contype="1" conaffinity="1" rgba="0.3 0.2 0.1 1"/>
-    </body>
+    </body> -->
 
     <!-- 桌上待抓物体 -->
-    <body name="obj_can" pos="2.2 0.6 0.80">
+    <!-- <body name="obj_can" pos="2.2 0.6 0.80">
       <freejoint/>
       <geom type="cylinder" size="0.035 0.06" mass="0.2"
              contype="1" conaffinity="1" rgba="0.9 0.2 0.2 1"/>
-    </body>
+    </body> -->
 
     <!-- 货架 / 隔断 -->
-    <body name="shelf_1" pos="-1.5 1.8 0">
+    <!-- <body name="shelf_1" pos="-1.5 1.8 0">
       <geom type="box" pos="0 0 0.9" size="0.4 0.05 0.9"
              contype="1" conaffinity="1" rgba="0.6 0.6 0.65 1"/>
-    </body>
+    </body> -->
 
     <!-- 静态箱子障碍 -->
-    <body name="box_obs" pos="1.0 -1.2 0.25">
+    <!-- <body name="box_obs" pos="1.0 -1.2 0.25">
       <geom type="box" size="0.25 0.25 0.25"
              contype="1" conaffinity="1" rgba="0.4 0.5 0.7 1"/>
-    </body>
+    </body> -->
 
   </worldbody>
 

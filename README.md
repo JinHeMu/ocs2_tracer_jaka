@@ -61,3 +61,6 @@ ros2 service call /coverage_visualizer/reload std_srvs/srv/Trigger
 
 export MUJOCO_GL=egl
 ros2 launch tracer_jaka_mujoco bridge.launch.py viewer:=false
+
+export ISAAC_ROS_WS=${HOME}/workspaces/isaac_ros-dev
+export ISAAC_ROS_NVBLOX_PLUGIN_FORCE_FALLBACK_MATERIAL=1

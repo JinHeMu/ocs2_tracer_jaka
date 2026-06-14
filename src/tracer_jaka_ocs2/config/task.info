@@ -151,7 +151,7 @@ inputCost
       }
       wheelBasedMobileManipulator
       {
-        scaling 1e-2
+        scaling 10000
         (0,0)  2.5  ; forward velocity
         (1,1)  2.5  ; turning velocity
       }
