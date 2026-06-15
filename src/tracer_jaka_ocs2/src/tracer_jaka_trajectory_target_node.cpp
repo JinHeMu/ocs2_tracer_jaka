@@ -62,7 +62,7 @@ class PathTrajectoryTargetNode : public rclcpp::Node {
     // ── 基础参数 ──────────────────────────────────────────
     declare_parameter<std::string>(
         "csv_file",
-        "/home/a/ocs2_tracer_jaka/outputs/coverage_path.csv");
+        "/home/ras/tracer_jaka/outputs/coverage_path_longer.csv");
 
     declare_parameter<std::string>("robot_name",   "mobile_manipulator");
     declare_parameter<std::string>("marker_frame", "odom");
@@ -77,7 +77,7 @@ class PathTrajectoryTargetNode : public rclcpp::Node {
     //
     // 如果 marker_frame = odom，且 odom 的 Z 轴朝上：
     //   z_offset = 0.05 表示轨迹整体上移 5 cm。
-    declare_parameter<double>("z_offset", 0.02);
+    declare_parameter<double>("z_offset", 0.05);
 
     // ── 姿态参数 ──────────────────────────────────────────
     declare_parameter<std::vector<double>>(
@@ -107,8 +107,8 @@ class PathTrajectoryTargetNode : public rclcpp::Node {
     declare_parameter<bool>("flip_normal", false);
 
     // ── 时间参数化 ─────────────────────────────────────────
-    declare_parameter<double>("linear_speed",  0.10);
-    declare_parameter<double>("angular_speed", 0.50);
+    declare_parameter<double>("linear_speed",  0.05);
+    declare_parameter<double>("angular_speed", 0.25);
     declare_parameter<double>("min_dt",        0.05);
     declare_parameter<double>("start_lead",    0.0);
 

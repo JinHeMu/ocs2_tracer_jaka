@@ -88,7 +88,7 @@
         </ros2_control>
     <link name="base_link">
       <visual>
-        <origin xyz="0 0 0" rpy="1.57 0 0" />
+        <origin xyz="0 0 0" rpy="1.57 0 0.0" />
         <geometry>
           <mesh filename="package://tracer_jaka_mujoco/urdf/meshes/tracer_base_link_no_wheel.dae" />
         </geometry>
@@ -596,7 +596,7 @@
     <origin xyz="0 0 0" rpy="0 0 0" />
   </joint>
 
-  <joint name="right_wheel" type="continuous">
+  <joint name="right_wheel" type="fixed">
     <parent link="base_link" />
     <child link="right_wheel_link" />
     <origin xyz="0 -0.17 -0.082" rpy="0 0 0" />
@@ -605,7 +605,7 @@
     <dynamics damping="0.05" friction="0.1" />
   </joint>
 
-  <joint name="left_wheel" type="continuous">
+  <joint name="left_wheel" type="fixed">
     <parent link="base_link" />
     <child link="left_wheel_link" />
     <origin xyz="0 0.17 -0.082" rpy="0 0 0" />
@@ -701,7 +701,7 @@
   <joint name="base_to_jaka" type="fixed">
     <parent link="base_link" />
     <child link="jaka_base_link" />
-    <origin xyz="0 0 0.221" rpy="0 0 -1.57" />
+    <origin xyz="0 0 0.221" rpy="0 0 -1.5708" />
   </joint>
 
   <joint name="fixed" type="fixed">
@@ -779,7 +779,7 @@
   <joint name="tool0_and_camera_link_joint" type="fixed">
     <parent link="jk_se_vi_200_link" />
     <child link="tool0_and_camera_link" />
-    <origin xyz="0 0 0" rpy="0 0 -2.3561945" />
+    <origin xyz="0 0 0" rpy="0 0 -0.785398" />
   </joint>
 
   <joint name="d435i_joint" type="fixed">

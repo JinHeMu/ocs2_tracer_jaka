@@ -127,7 +127,7 @@ def generate_launch_description():
     )
     spawn_jtc = Node(
         package='controller_manager', executable='spawner',
-        arguments=['jaka_arm_controller',
+        arguments=['jaka_forward_controller',
                    '--controller-manager', '/controller_manager'],
         output='screen',
     )
@@ -160,12 +160,12 @@ def generate_launch_description():
         parameters=[{
             **common_ocs2,
             'mrt_loop_rate':     100.0,
-            'traj_horizon':      0.10,                 # 实机给宽一点
+            'traj_horizon':      0.20,                 # 实机给宽一点
             'use_stamped_cmd':   False,                # *** 关键: 发 Twist ***
             'base_cmd_topic':    '/cmd_vel',           # *** tracer_base 订这个 ***
             'odom_topic':        '/odom',              # *** tracer_base 发这个 ***
             'joint_state_topic': '/joint_states',
-            'arm_cmd_topic':     '/jaka_arm_controller/joint_trajectory',
+            'arm_cmd_topic':     '/jaka_forward_controller/commands',
             'arm_joint_names':   ['joint_1','joint_2','joint_3',
                                   'joint_4','joint_5','joint_6'],
             'base_frame':        'base_footprint',

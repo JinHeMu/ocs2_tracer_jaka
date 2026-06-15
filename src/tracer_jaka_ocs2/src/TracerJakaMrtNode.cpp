@@ -24,7 +24,7 @@
 #include <vector>
 
 #include <Eigen/Dense>
-
+#include <std_msgs/msg/float64_multi_array.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <nav_msgs/msg/odometry.hpp>
@@ -56,7 +56,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     declare_parameter<double>("mrt_loop_rate",          100.0);
     declare_parameter<double>("traj_horizon",           0.05);
     declare_parameter<std::string>("base_cmd_topic",    "/diff_drive_controller/cmd_vel");
-    declare_parameter<std::string>("arm_cmd_topic",     "/jaka_arm_controller/joint_trajectory");
+    declare_parameter<std::string>("arm_cmd_topic",     "/jaka_forward_controller/command");
     declare_parameter<std::string>("odom_topic",        "/diff_drive_controller/odom");
     declare_parameter<std::string>("joint_state_topic", "/joint_states");
     declare_parameter<bool>("use_stamped_cmd",          true);   // *** new ***
@@ -79,6 +79,8 @@ class TracerJakaMrtBridge : public rclcpp::Node {
     useStampedCmd_  = get_parameter("use_stamped_cmd").as_bool();
 
     armQ_.assign(armJointNames_.size(), 0.0);
+
+    
 
     if (taskFile_.empty() || libFolder_.empty() || urdfFile_.empty()) {
       throw std::runtime_error(
@@ -123,9 +125,11 @@ class TracerJakaMrtBridge : public rclcpp::Node {
                   "Publishing base cmd as Twist on %s (real-robot mode)",
                   baseTopic.c_str());
     }
-    arm_cmd_pub_ = create_publisher<trajectory_msgs::msg::JointTrajectory>(
+    arm_cmd_pub_ = create_publisher<std_msgs::msg::Float64MultiArray>(
         get_parameter("arm_cmd_topic").as_string(), 10);
 
+
+        
     // ----- subs (在主 node 上, 由 main() 里的 executor spin) -----
     odom_sub_ = create_subscription<nav_msgs::msg::Odometry>(
         get_parameter("odom_topic").as_string(),
@@ -305,55 +309,48 @@ class TracerJakaMrtBridge : public rclcpp::Node {
 
   void publishBaseCommand(const ocs2::vector_t& input) {
     if (input.size() < 2) return;
-
+    double v = input(0), w = input(1);
+    // 静止死区：避免零空间残差 / 数值噪声变成持续爬行
+    if (std::abs(v) < 0.02) v = 0.0;     // 2 cm/s
+    if (std::abs(w) < 0.03) w = 0.0;     // ~1.7 deg/s
     if (useStampedCmd_) {
       geometry_msgs::msg::TwistStamped msg;
-      msg.header.stamp    = now();
+      msg.header.stamp = now();
       msg.header.frame_id = baseFrame_;
-      msg.twist.linear.x  = input(0);
-      msg.twist.angular.z = input(1);
+      msg.twist.linear.x = v; msg.twist.angular.z = w;
       base_cmd_stamped_pub_->publish(msg);
     } else {
       geometry_msgs::msg::Twist msg;
-      msg.linear.x  = input(0);
-      msg.angular.z = input(1);
+      msg.linear.x = v; msg.angular.z = w;
       base_cmd_unstamped_pub_->publish(msg);
     }
   }
 
   /// 单点 trajectory, *只* 写 position, 不写 velocity.
+// 头文件加： #include <std_msgs/msg/float64_multi_array.hpp>
+// 成员改： rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr arm_cmd_pub_;
+// 构造里： arm_cmd_pub_ = create_publisher<std_msgs::msg::Float64MultiArray>(
+//             "/jaka_arm_controller/commands", 10);
+
   void publishArmCommand(double currentTime, const ocs2::vector_t& currentState) {
-    // —— 防越界：把查询时间 clamp 到 policy 末端之前一点 ——
-    double queryTime = currentTime + trajHorizon_;
+    // 只看一个很小的控制周期，让臂"跟住"MPC 当前规划，而不是追 0.2s 之外
+    double queryTime = currentTime + (1.0 / mrtRate_);   // 例如 +10ms
     const auto& policy = mrt_->getPolicy();
     if (!policy.timeTrajectory_.empty()) {
       const double tEnd = policy.timeTrajectory_.back();
       constexpr double kSafety = 1e-3;
-      if (queryTime > tEnd - kSafety) {
-        queryTime = std::max(currentTime, tEnd - kSafety);
-      }
+      if (queryTime > tEnd - kSafety) queryTime = std::max(currentTime, tEnd - kSafety);
     }
-
-    ocs2::vector_t optState, optInput;
-    size_t mode;
+    ocs2::vector_t optState, optInput; size_t mode;
     mrt_->evaluatePolicy(queryTime, currentState, optState, optInput, mode);
 
-    trajectory_msgs::msg::JointTrajectory traj;
-    traj.header.stamp = now();
-    traj.joint_names  = armJointNames_;
-
-    trajectory_msgs::msg::JointTrajectoryPoint pt;
-    pt.positions.resize(armJointNames_.size());
+    std_msgs::msg::Float64MultiArray cmd;
+    cmd.data.resize(armJointNames_.size());
     for (size_t i = 0; i < armJointNames_.size(); ++i)
-      pt.positions[i] = optState(3 + i);
-
-    const double dt = std::max(0.0, queryTime - currentTime);
-    pt.time_from_start.sec     = static_cast<int32_t>(dt);
-    pt.time_from_start.nanosec = static_cast<uint32_t>((dt - std::floor(dt)) * 1e9);
-
-    traj.points.push_back(std::move(pt));
-    arm_cmd_pub_->publish(traj);
+      cmd.data[i] = optState(3 + i);
+    arm_cmd_pub_->publish(cmd);
   }
+
 
   // -------- members --------
   std::string taskFile_, libFolder_, urdfFile_;
@@ -373,7 +370,7 @@ class TracerJakaMrtBridge : public rclcpp::Node {
 
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr base_cmd_stamped_pub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr        base_cmd_unstamped_pub_;
-  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr arm_cmd_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr arm_cmd_pub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr js_sub_;
 

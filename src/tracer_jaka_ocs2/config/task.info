@@ -151,7 +151,7 @@ inputCost
       }
       wheelBasedMobileManipulator
       {
-        scaling 10000
+        scaling 1e-2
         (0,0)  2.5  ; forward velocity
         (1,1)  2.5  ; turning velocity
       }
@@ -227,18 +227,18 @@ jointVelocityLimits
       }
       wheelBasedMobileManipulator
       {
-        (0,0)  -0.25
-        (1,0)  -0.5
+        (0,0)  -0.1
+        (1,0)  -0.25
       }
     }
     arm
     {
-      (0,0)  -2.0
-      (1,0)  -2.0
-      (2,0)  -2.0
-      (3,0)  -2.0
-      (4,0)  -2.0
-      (5,0)  -2.0
+      (0,0)  -1.0
+      (1,0)  -1.0
+      (2,0)  -1.0
+      (3,0)  -1.0
+      (4,0)  -1.0
+      (5,0)  -1.0
     }
   }
 
@@ -250,27 +250,27 @@ jointVelocityLimits
       floatingArmManipulator           { }
       fullyActuatedFloatingArmManipulator
       {
-        (0,0)  2.0
-        (1,0)  2.0
-        (2,0)  2.0
+        (0,0)  1.0
+        (1,0)  1.0
+        (2,0)  1.0
         (3,0)  0.3
         (4,0)  0.3
         (5,0)  0.3
       }
       wheelBasedMobileManipulator
       {
-        (0,0)  0.25
-        (1,0)  0.5
+        (0,0)  0.1
+        (1,0)  0.25
       }
     }
     arm
     {
-      (0,0)  2.0
-      (1,0)  2.0
-      (2,0)  2.0
-      (3,0)  2.0
-      (4,0)  2.0
-      (5,0)  2.0
+      (0,0)  1.0
+      (1,0)  1.0
+      (2,0)  1.0
+      (3,0)  1.0
+      (4,0)  1.0
+      (5,0)  1.0
     }
   }
 }

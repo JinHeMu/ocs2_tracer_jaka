@@ -300,39 +300,57 @@ namespace jaka_hardware_interface
       // B. 更新力传感器数据
       if (hw_fts_states_.size() == 6)
       {
-        // 1. 原始力/力矩 (Raw 减去 在on_activate中计算出的动态Bias)
-        Eigen::Vector3d F_sensor(edg_state_.torqSensor.fx - ft_bias_[0],
-                                 edg_state_.torqSensor.fy - ft_bias_[1],
-                                 edg_state_.torqSensor.fz - ft_bias_[2]);
-        Eigen::Vector3d M_sensor(edg_state_.torqSensor.tx - ft_bias_[3],
-                                 edg_state_.torqSensor.ty - ft_bias_[4],
-                                 edg_state_.torqSensor.tz - ft_bias_[5]);
+        // hw_fts_states_[0] = edg_state_.torqSensor.fx ;
+        // hw_fts_states_[1] = edg_state_.torqSensor.fy ;
+        // hw_fts_states_[2] = edg_state_.torqSensor.fz ;
+        // hw_fts_states_[3] = edg_state_.torqSensor.tx ;
+        // hw_fts_states_[4] = edg_state_.torqSensor.ty ;
+        // hw_fts_states_[5] = edg_state_.torqSensor.tz ;
+        // 1. 原始力/力矩减零偏，得到传感器原点处的 wrench
+        Eigen::Vector3d F_s(
+          edg_state_.torqSensor.fx - ft_bias_[0],
+          edg_state_.torqSensor.fy - ft_bias_[1],
+          edg_state_.torqSensor.fz - ft_bias_[2]
+        );
 
-        // 2. 构建旋转矩阵 R_sensor_to_tool
-        // TODO: 如果你后续需要，也可以把这个矩阵提取成参数。目前保持硬编码。
-        Eigen::Matrix3d R_s_t;
-        R_s_t <<  0.707, -0.707,  0.000,
-                  0.664,  0.664,  0.342,
-                 -0.242, -0.242,  0.940;
+        Eigen::Vector3d tau_s(
+          edg_state_.torqSensor.tx - ft_bias_[3],
+          edg_state_.torqSensor.ty - ft_bias_[4],
+          edg_state_.torqSensor.tz - ft_bias_[5]
+        );
 
-        // 3. 构建力臂向量 r (tool0 到 sensor 的位移，由参数初始化)
-        Eigen::Vector3d r_t_s(r_t_s_[0], r_t_s_[1], r_t_s_[2]);
+        // 2. 从传感器原点指向 tool0/TCP 原点的向量，单位 m
+        // 注意：这个向量必须在“传感器坐标系”下表达
+        Eigen::Vector3d r_s_tool(
+          r_t_s_[0],
+          r_t_s_[1],
+          r_t_s_[2]
+        );
 
-        // 4. 物理变换
-        // F_tool = R * F_sensor
-        Eigen::Vector3d F_tool = R_s_t * F_sensor;
+        // 3. 将力矩从传感器原点平移到 tool0 原点
+        // tau_tool = tau_sensor - r_sensor_to_tool × F_sensor
+        Eigen::Vector3d tau_tool = tau_s - r_s_tool.cross(F_s);
 
-        // M_tool = R * M_sensor + (r x F_tool)
-        Eigen::Vector3d M_tool = R_s_t * M_sensor + r_t_s.cross(F_tool);
+        // 4. 输出补偿后的 wrench
+        hw_fts_states_[0] = F_s.x();
+        hw_fts_states_[1] = F_s.y();
+        hw_fts_states_[2] = F_s.z();
 
-        // 5. 滤波与输出给导纳控制器
-        std::array<double, 6> compensated_ft = {F_tool.x(), F_tool.y(), F_tool.z(),
-                                                M_tool.x(), M_tool.y(), M_tool.z()};
+        hw_fts_states_[3] = tau_tool.x();
+        hw_fts_states_[4] = tau_tool.y();
+        hw_fts_states_[5] = tau_tool.z();
+
+
+        // hw_fts_states_[0] = edg_state_.torqSensor.fx - ft_bias_[0];
+        // hw_fts_states_[1] = edg_state_.torqSensor.fy - ft_bias_[1];
+        // hw_fts_states_[2] = edg_state_.torqSensor.fz - ft_bias_[2];
+        // hw_fts_states_[3] = edg_state_.torqSensor.tx - ft_bias_[3];
+        // hw_fts_states_[4] = edg_state_.torqSensor.ty - ft_bias_[4];
+        // hw_fts_states_[5] = edg_state_.torqSensor.tz - ft_bias_[5];
+
 
         for (int i = 0; i < 6; ++i)
         {
-          // 1. 低通滤波 (防止导纳控制震荡)
-          hw_fts_states_[i] = filter_alpha_ * compensated_ft[i] + (1.0 - filter_alpha_) * hw_fts_states_[i];
 
           // 2. 死区处理 (防止静止时的微小漂移触发运动)
           double db = (i < 3) ? deadband_force_ : deadband_torque_;

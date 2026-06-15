@@ -7,6 +7,8 @@ Panels:
         - /Global Options1
         - /Status1
         - /Grid1
+        - /TF1
+        - /TF1/Frames1
         - /TargetPose1
         - /InteractiveMarkers1
         - /Path1
@@ -17,7 +19,7 @@ Panels:
         - /PointCloud21
         - /PointCloud21/Topic1
       Splitter Ratio: 0.5
-    Tree Height: 803
+    Tree Height: 352
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -221,19 +223,128 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz_default_plugins/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
-      Marker Scale: 0.5
+        All Enabled: false
+        Link_0:
+          Value: false
+        Link_1:
+          Value: false
+        Link_2:
+          Value: false
+        Link_3:
+          Value: false
+        Link_4:
+          Value: false
+        Link_5:
+          Value: false
+        Link_6:
+          Value: false
+        Link_6_45:
+          Value: false
+        aluminium_2_base_link:
+          Value: false
+        aluminium_3_base_link:
+          Value: false
+        aluminium_4_base_link:
+          Value: false
+        aluminium_base_link:
+          Value: false
+        base_footprint:
+          Value: false
+        base_link:
+          Value: false
+        d435i_link:
+          Value: false
+        fl_castor_link:
+          Value: false
+        fl_wheel_link:
+          Value: false
+        fr_castor_link:
+          Value: false
+        fr_wheel_link:
+          Value: false
+        inertial_link:
+          Value: false
+        jaka_base_link:
+          Value: false
+        jk_se_vi_200_link:
+          Value: false
+        left_wheel_link:
+          Value: false
+        odom:
+          Value: true
+        right_wheel_link:
+          Value: false
+        rl_castor_link:
+          Value: false
+        rl_wheel_link:
+          Value: false
+        rr_castor_link:
+          Value: false
+        rr_wheel_link:
+          Value: false
+        tool0:
+          Value: false
+        tool0_and_camera_link:
+          Value: false
+        urbase_base_link:
+          Value: false
+      Marker Scale: 5
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        odom:
+          base_footprint:
+            base_link:
+              aluminium_2_base_link:
+                {}
+              aluminium_3_base_link:
+                {}
+              aluminium_4_base_link:
+                {}
+              aluminium_base_link:
+                {}
+              fl_castor_link:
+                fl_wheel_link:
+                  {}
+              fr_castor_link:
+                fr_wheel_link:
+                  {}
+              inertial_link:
+                {}
+              jaka_base_link:
+                Link_0:
+                  Link_1:
+                    Link_2:
+                      Link_3:
+                        Link_4:
+                          Link_5:
+                            Link_6:
+                              Link_6_45:
+                                jk_se_vi_200_link:
+                                  tool0_and_camera_link:
+                                    d435i_link:
+                                      {}
+                                    tool0:
+                                      {}
+              left_wheel_link:
+                {}
+              right_wheel_link:
+                {}
+              rl_castor_link:
+                rl_wheel_link:
+                  {}
+              rr_castor_link:
+                rr_wheel_link:
+                  {}
+              urbase_base_link:
+                {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: MPC_TargetTrajectories
@@ -308,13 +419,13 @@ Visualization Manager:
       Value: false
     - Class: rviz_default_plugins/InteractiveMarkers
       Enable Transparency: true
-      Enabled: false
+      Enabled: true
       Interactive Markers Namespace: /target_marker
       Name: InteractiveMarkers
       Show Axes: false
       Show Descriptions: true
       Show Visual Aids: false
-      Value: false
+      Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: false
       Name: MarkerArray
@@ -441,7 +552,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 6.185178279876709
+      Distance: 2.983961820602417
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -456,22 +567,22 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8150007128715515
+      Pitch: 0.7350021004676819
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.8999965786933899
+      Yaw: 1.44818115234375
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1798
+  Height: 839
   Hide Left Dock: false
   Hide Right Dock: false
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000001f70000066afc0200000004fb000000100044006900730070006c006100790073010000006e000003910000018200fffffffb0000000a00560069006500770073010000040b000002cd0000013200fffffffb0000000a0049006d0061006700650200000a16000004c4000001f7000000ebfb0000000a0049006d0061006700650200000a16000005ac000001f7000000eb0000073b0000066a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f7000002edfc0200000004fb000000100044006900730070006c006100790073010000003d0000019d000000c900fffffffb0000000a0056006900650077007301000001e00000014a000000a400fffffffb0000000a0049006d00610067006502000005890000034d000001f7000000ebfb0000000a0049006d00610067006502000005890000034d000001f7000000eb000002d8000002ed00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 2366
-  X: 1156
-  Y: 200
+  Width: 1237
+  X: 301
+  Y: 114
